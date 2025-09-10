@@ -1,7 +1,7 @@
 {
   "name": "EduPath",
   "short_name": "EduPath",
-  "description": "Mark daily attendance by subject, view your routine, and track your stats.",
+  "description": "",
   "start_url": "/index.html",
   "scope": "/",
   "display": "standalone",

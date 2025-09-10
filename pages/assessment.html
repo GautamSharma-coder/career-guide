@@ -1,0 +1,1064 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Career Assessment - EduPath</title>
+    <script src="https://cdn.jsdelivr.net/npm/@tailwindcss/browser@4"></script>
+    <script defer src="https://cdn.jsdelivr.net/npm/@alpinejs/intersect@3.x.x/dist/cdn.min.js"></script>
+    <script defer src="https://cdn.jsdelivr.net/npm/alpinejs@3.x.x/dist/cdn.min.js"></script>
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.0.0/css/all.min.css">
+    
+    <style>
+        @import url('https://fonts.googleapis.com/css2?family=Space+Grotesk:wght@300;400;500;600;700&display=swap');
+        @import url('https://fonts.googleapis.com/css2?family=Syne:wght@400;500;600;700;800&display=swap');
+        
+        body {
+            font-family: 'Space Grotesk', sans-serif;
+        }
+        
+        .font-display {
+            font-family: 'Syne', sans-serif;
+        }
+        
+        [x-cloak] { display: none !important; }
+        
+        .morph-bg {
+            border-radius: 30px;
+            background: #ffffff;
+            box-shadow: 20px 20px 60px #d9d9d9, -20px -20px 60px #ffffff;
+        }
+        
+        .text-gradient {
+            background: linear-gradient(90deg, #4F46E5, #EC4899);
+            -webkit-background-clip: text;
+            background-clip: text;
+            color: transparent;
+        }
+        
+        .bg-gradient {
+            background: linear-gradient(135deg, #4F46E5, #EC4899);
+        }
+        
+        .progress-bar {
+            transition: width 0.6s cubic-bezier(0.4, 0, 0.2, 1);
+        }
+        
+        .question-card {
+            transition: all 0.4s cubic-bezier(0.175, 0.885, 0.32, 1.275);
+        }
+        
+        .option-button {
+            transition: all 0.3s ease;
+        }
+        
+        .option-button:hover {
+            transform: translateY(-2px);
+        }
+        
+        .option-button.selected {
+            background: linear-gradient(135deg, #4F46E5, #EC4899);
+            color: white;
+            transform: scale(1.05);
+        }
+        
+        .category-indicator {
+            transition: all 0.3s ease;
+        }
+        
+        .category-indicator.active {
+            background: linear-gradient(135deg, #4F46E5, #EC4899);
+            color: white;
+        }
+        
+        .fade-in-up {
+            animation: fadeInUp 0.6s ease-out;
+        }
+        
+        @keyframes fadeInUp {
+            from {
+                opacity: 0;
+                transform: translateY(30px);
+            }
+            to {
+                opacity: 1;
+                transform: translateY(0);
+            }
+        }
+        
+        .pulse-glow {
+            animation: pulseGlow 2s ease-in-out infinite;
+        }
+        
+        @keyframes pulseGlow {
+            0%, 100% { box-shadow: 0 0 20px rgba(79, 70, 229, 0.3); }
+            50% { box-shadow: 0 0 40px rgba(79, 70, 229, 0.6); }
+        }
+    </style>
+</head>
+<body class="bg-gray-50 text-gray-900" x-data="assessmentApp()">
+
+    <!-- Navigation -->
+    <header class="bg-white/80 backdrop-blur-lg shadow-md fixed w-full z-50">
+        <div class="max-w-7xl mx-auto px-6 py-4">
+            <div class="flex items-center justify-between">
+                <a href="index.html" class="font-display font-bold text-2xl tracking-tighter">
+                    Edu<span class="text-gradient">Path</span>
+                </a>
+                
+                <div class="flex items-center space-x-4">
+                    <span class="text-sm text-gray-600" x-text="`Question ${currentQuestion + 1} of ${totalQuestions}`"></span>
+                    <button @click="saveAndExit()" class="px-4 py-2 text-gray-600 hover:text-gray-900 transition">
+                        <i class="fas fa-times mr-2"></i>Exit
+                    </button>
+                </div>
+            </div>
+        </div>
+    </header>
+
+    <!-- Assessment Container -->
+    <div class="pt-24 pb-12 min-h-screen">
+        <div class="max-w-4xl mx-auto px-6">
+            
+            <!-- Progress Section -->
+            <div class="mb-8">
+                <div class="flex items-center justify-between mb-4">
+                    <h1 class="text-2xl font-display font-bold">Career Assessment</h1>
+                    <span class="text-sm font-medium text-gray-600" x-text="`${Math.round(progress)}% Complete`"></span>
+                </div>
+                
+                <!-- Progress Bar -->
+                <div class="w-full bg-gray-200 rounded-full h-3 overflow-hidden">
+                    <div class="bg-gradient h-full rounded-full progress-bar" :style="`width: ${progress}%`"></div>
+                </div>
+                
+                <!-- Category Indicators -->
+                <div class="flex justify-center mt-6 space-x-4">
+                    <div class="category-indicator px-4 py-2 rounded-full text-sm font-medium"
+                         :class="{'active': currentCategory === 'aptitude'}"
+                         class="bg-gray-200 text-gray-700">
+                        <i class="fas fa-brain mr-2"></i>Aptitude
+                    </div>
+                    <div class="category-indicator px-4 py-2 rounded-full text-sm font-medium"
+                         :class="{'active': currentCategory === 'interests'}"
+                         class="bg-gray-200 text-gray-700">
+                        <i class="fas fa-heart mr-2"></i>Interests
+                    </div>
+                    <div class="category-indicator px-4 py-2 rounded-full text-sm font-medium"
+                         :class="{'active': currentCategory === 'personality'}"
+                         class="bg-gray-200 text-gray-700">
+                        <i class="fas fa-user mr-2"></i>Personality
+                    </div>
+                    <div class="category-indicator px-4 py-2 rounded-full text-sm font-medium"
+                         :class="{'active': currentCategory === 'academic'}"
+                         class="bg-gray-200 text-gray-700">
+                        <i class="fas fa-graduation-cap mr-2"></i>Academic
+                    </div>
+                </div>
+            </div>
+
+            <!-- Welcome Screen -->
+            <div x-show="!assessmentStarted" class="text-center py-16 fade-in-up">
+                <div class="morph-bg p-12 max-w-2xl mx-auto">
+                    <div class="w-24 h-24 bg-gradient rounded-full flex items-center justify-center mx-auto mb-8 pulse-glow">
+                        <i class="fas fa-compass text-3xl text-white"></i>
+                    </div>
+                    <h2 class="text-3xl font-display font-bold mb-6">Discover Your Perfect Career Path</h2>
+                    <p class="text-lg text-gray-600 mb-8">
+                        Our comprehensive assessment analyzes your aptitude, interests, personality, and academic preferences 
+                        to recommend the best career paths and educational routes for you.
+                    </p>
+                    <div class="grid grid-cols-2 gap-4 mb-8 text-sm">
+                        <div class="flex items-center text-gray-600">
+                            <i class="fas fa-clock mr-2 text-indigo-600"></i>15-20 minutes
+                        </div>
+                        <div class="flex items-center text-gray-600">
+                            <i class="fas fa-questions mr-2 text-indigo-600"></i>40 questions
+                        </div>
+                        <div class="flex items-center text-gray-600">
+                            <i class="fas fa-chart-line mr-2 text-indigo-600"></i>Detailed analysis
+                        </div>
+                        <div class="flex items-center text-gray-600">
+                            <i class="fas fa-university mr-2 text-indigo-600"></i>College recommendations
+                        </div>
+                    </div>
+                    <button @click="startAssessment()" 
+                            class="px-8 py-4 bg-black text-white font-medium rounded-full shadow-lg hover:shadow-xl transition-all duration-300 hover:scale-105">
+                        Start Assessment
+                    </button>
+                </div>
+            </div>
+
+            <!-- Question Screen -->
+            <div x-show="assessmentStarted && !showResults" class="fade-in-up">
+                <div class="morph-bg p-8 mb-8">
+                    <!-- Category Header -->
+                    <div class="text-center mb-8">
+                        <div class="inline-flex items-center px-4 py-2 bg-gray-100 rounded-full text-sm font-medium text-gray-600 mb-4">
+                            <i :class="getCurrentCategoryIcon()" class="mr-2"></i>
+                            <span x-text="getCurrentCategoryName()"></span>
+                        </div>
+                        <p class="text-sm text-gray-500" x-text="getCurrentCategoryDescription()"></p>
+                    </div>
+
+                    <!-- Question -->
+                    <div class="question-card">
+                        <h3 class="text-xl font-semibold mb-8 text-center leading-relaxed" x-text="getCurrentQuestion().question"></h3>
+                        
+                        <!-- Options -->
+                        <div class="grid grid-cols-1 gap-4 max-w-2xl mx-auto">
+                            <template x-for="(option, index) in getCurrentQuestion().options" :key="index">
+                                <button @click="selectOption(index)" 
+                                        class="option-button p-4 rounded-2xl border-2 text-left font-medium"
+                                        :class="selectedOption === index ? 'selected border-transparent' : 'border-gray-200 hover:border-indigo-300'">
+                                    <span class="flex items-center">
+                                        <span class="w-6 h-6 rounded-full border-2 mr-4 flex-shrink-0"
+                                              :class="selectedOption === index ? 'bg-white border-white' : 'border-gray-300'">
+                                            <i x-show="selectedOption === index" class="fas fa-check text-indigo-600 text-xs ml-1"></i>
+                                        </span>
+                                        <span x-text="option"></span>
+                                    </span>
+                                </button>
+                            </template>
+                        </div>
+                    </div>
+                    
+                    <!-- Navigation -->
+                    <div class="flex justify-between items-center mt-12">
+                        <button @click="previousQuestion()" 
+                                x-show="currentQuestion > 0"
+                                class="px-6 py-3 text-gray-600 hover:text-gray-900 font-medium transition">
+                            <i class="fas fa-arrow-left mr-2"></i>Previous
+                        </button>
+                        <div x-show="currentQuestion === 0"></div>
+                        
+                        <button @click="nextQuestion()" 
+                                :disabled="selectedOption === null"
+                                class="px-8 py-3 bg-black text-white font-medium rounded-full transition-all duration-300 hover:scale-105"
+                                :class="selectedOption === null ? 'opacity-50 cursor-not-allowed' : 'hover:shadow-lg'">
+                            <span x-text="currentQuestion === totalQuestions - 1 ? 'Finish Assessment' : 'Next Question'"></span>
+                            <i class="fas fa-arrow-right ml-2"></i>
+                        </button>
+                    </div>
+                </div>
+
+                <!-- Real-time Insights -->
+                <div x-show="currentQuestion >= 5" class="morph-bg p-6">
+                    <h4 class="text-lg font-semibold mb-4 flex items-center">
+                        <i class="fas fa-lightbulb text-yellow-500 mr-2"></i>
+                        Early Insights
+                    </h4>
+                    <div class="grid grid-cols-1 md:grid-cols-3 gap-4 text-sm">
+                        <div class="p-4 bg-blue-50 rounded-2xl">
+                            <div class="font-medium text-blue-900">Aptitude Strength</div>
+                            <div class="text-blue-700" x-text="getTopAptitude()"></div>
+                        </div>
+                        <div class="p-4 bg-green-50 rounded-2xl">
+                            <div class="font-medium text-green-900">Interest Area</div>
+                            <div class="text-green-700" x-text="getTopInterest()"></div>
+                        </div>
+                        <div class="p-4 bg-purple-50 rounded-2xl">
+                            <div class="font-medium text-purple-900">Learning Style</div>
+                            <div class="text-purple-700" x-text="getLearningStyle()"></div>
+                        </div>
+                    </div>
+                </div>
+            </div>
+
+            <!-- Results Screen -->
+            <div x-show="showResults" class="fade-in-up">
+                <div class="text-center mb-12">
+                    <div class="w-32 h-32 bg-gradient rounded-full flex items-center justify-center mx-auto mb-6 pulse-glow">
+                        <i class="fas fa-trophy text-4xl text-white"></i>
+                    </div>
+                    <h2 class="text-4xl font-display font-bold mb-4">Assessment Complete!</h2>
+                    <p class="text-lg text-gray-600">Here are your personalized career recommendations</p>
+                </div>
+
+                <!-- Results Grid -->
+                <div class="grid grid-cols-1 lg:grid-cols-2 gap-8">
+                    <!-- Personality Profile -->
+                    <div class="morph-bg p-8">
+                        <h3 class="text-2xl font-bold mb-6 flex items-center">
+                            <i class="fas fa-user-circle text-indigo-600 mr-3"></i>
+                            Your Profile
+                        </h3>
+                        <div class="space-y-4">
+                            <div class="flex justify-between items-center p-4 bg-gray-50 rounded-2xl">
+                                <span class="font-medium">Dominant Aptitude</span>
+                                <span class="text-indigo-600 font-semibold" x-text="results.topAptitude"></span>
+                            </div>
+                            <div class="flex justify-between items-center p-4 bg-gray-50 rounded-2xl">
+                                <span class="font-medium">Primary Interest</span>
+                                <span class="text-pink-600 font-semibold" x-text="results.topInterest"></span>
+                            </div>
+                            <div class="flex justify-between items-center p-4 bg-gray-50 rounded-2xl">
+                                <span class="font-medium">Personality Type</span>
+                                <span class="text-green-600 font-semibold" x-text="results.personalityType"></span>
+                            </div>
+                            <div class="flex justify-between items-center p-4 bg-gray-50 rounded-2xl">
+                                <span class="font-medium">Learning Style</span>
+                                <span class="text-purple-600 font-semibold" x-text="results.learningStyle"></span>
+                            </div>
+                        </div>
+                    </div>
+
+                    <!-- Recommended Careers -->
+                    <div class="morph-bg p-8">
+                        <h3 class="text-2xl font-bold mb-6 flex items-center">
+                            <i class="fas fa-briefcase text-green-600 mr-3"></i>
+                            Top Career Matches
+                        </h3>
+                        <div class="space-y-4">
+                            <template x-for="(career, index) in results.recommendedCareers" :key="index">
+                                <div class="p-4 border border-gray-200 rounded-2xl hover:shadow-md transition-shadow">
+                                    <div class="flex justify-between items-start mb-2">
+                                        <h4 class="font-semibold" x-text="career.title"></h4>
+                                        <span class="text-sm bg-green-100 text-green-800 px-2 py-1 rounded-full" 
+                                              x-text="`${career.match}% match`"></span>
+                                    </div>
+                                    <p class="text-sm text-gray-600 mb-2" x-text="career.description"></p>
+                                    <div class="flex items-center text-xs text-gray-500">
+                                        <i class="fas fa-graduation-cap mr-1"></i>
+                                        <span x-text="career.education"></span>
+                                    </div>
+                                </div>
+                            </template>
+                        </div>
+                    </div>
+
+                    <!-- Recommended Colleges -->
+                    <div class="morph-bg p-8">
+                        <h3 class="text-2xl font-bold mb-6 flex items-center">
+                            <i class="fas fa-university text-blue-600 mr-3"></i>
+                            Suggested Colleges
+                        </h3>
+                        <div class="space-y-4">
+                            <template x-for="(college, index) in results.recommendedColleges" :key="index">
+                                <div class="p-4 border border-gray-200 rounded-2xl hover:shadow-md transition-shadow">
+                                    <h4 class="font-semibold mb-1" x-text="college.name"></h4>
+                                    <p class="text-sm text-gray-600 mb-2" x-text="college.course"></p>
+                                    <div class="flex justify-between items-center text-xs text-gray-500">
+                                        <span x-text="college.location"></span>
+                                        <span x-text="college.type"></span>
+                                    </div>
+                                </div>
+                            </template>
+                        </div>
+                    </div>
+
+                    <!-- Next Steps -->
+                    <div class="morph-bg p-8">
+                        <h3 class="text-2xl font-bold mb-6 flex items-center">
+                            <i class="fas fa-route text-orange-600 mr-3"></i>
+                            Your Action Plan
+                        </h3>
+                        <div class="space-y-4">
+                            <template x-for="(step, index) in results.actionPlan" :key="index">
+                                <div class="flex items-start p-4 bg-gray-50 rounded-2xl">
+                                    <span class="w-6 h-6 bg-orange-600 text-white text-xs rounded-full flex items-center justify-center mr-4 mt-1 flex-shrink-0" 
+                                          x-text="index + 1"></span>
+                                    <div>
+                                        <h4 class="font-semibold mb-1" x-text="step.title"></h4>
+                                        <p class="text-sm text-gray-600" x-text="step.description"></p>
+                                    </div>
+                                </div>
+                            </template>
+                        </div>
+                    </div>
+                </div>
+
+                <!-- Actions -->
+                <div class="text-center mt-12 space-y-4">
+                    <button @click="downloadReport()" 
+                            class="px-8 py-4 bg-gradient text-white font-medium rounded-full shadow-lg hover:shadow-xl transition-all duration-300 hover:scale-105 mr-4">
+                        <i class="fas fa-download mr-2"></i>Download Full Report
+                    </button>
+                    <button @click="exploreColleges()" 
+                            class="px-8 py-4 bg-white text-gray-900 font-medium rounded-full border border-gray-300 shadow-lg hover:shadow-xl transition-all duration-300 hover:scale-105">
+                        <i class="fas fa-university mr-2"></i>Explore Colleges
+                    </button>
+                </div>
+            </div>
+        </div>
+    </div>
+
+    <script>
+        function assessmentApp() {
+            return {
+                assessmentStarted: false,
+                showResults: false,
+                currentQuestion: 0,
+                selectedOption: null,
+                answers: [],
+                
+                // Comprehensive question bank
+                questions: [
+                    // Aptitude Questions (10)
+                    {
+                        category: 'aptitude',
+                        question: 'Which type of problem-solving appeals to you most?',
+                        options: [
+                            'Mathematical calculations and logical reasoning',
+                            'Creative design and visual composition',
+                            'Understanding human behavior and emotions',
+                            'Analyzing data patterns and trends'
+                        ]
+                    },
+                    {
+                        category: 'aptitude',
+                        question: 'In group projects, you naturally tend to:',
+                        options: [
+                            'Take charge and organize the workflow',
+                            'Generate innovative ideas and concepts',
+                            'Facilitate communication between team members',
+                            'Handle detailed analysis and documentation'
+                        ]
+                    },
+                    {
+                        category: 'aptitude',
+                        question: 'When learning something new, you prefer:',
+                        options: [
+                            'Step-by-step structured tutorials',
+                            'Hands-on experimentation and discovery',
+                            'Discussion and collaboration with others',
+                            'Reading comprehensive theoretical materials'
+                        ]
+                    },
+                    {
+                        category: 'aptitude',
+                        question: 'Your strongest cognitive ability is:',
+                        options: [
+                            'Logical reasoning and problem solving',
+                            'Spatial visualization and design thinking',
+                            'Verbal communication and language skills',
+                            'Numerical analysis and pattern recognition'
+                        ]
+                    },
+                    {
+                        category: 'aptitude',
+                        question: 'Which statement best describes your thinking style?',
+                        options: [
+                            'I think systematically and analytically',
+                            'I think creatively and outside the box',
+                            'I consider multiple perspectives and implications',
+                            'I focus on facts, data, and evidence'
+                        ]
+                    },
+                    {
+                        category: 'aptitude',
+                        question: 'When faced with a complex problem, you first:',
+                        options: [
+                            'Break it down into smaller, manageable parts',
+                            'Look for creative or unconventional solutions',
+                            'Consider how it affects different stakeholders',
+                            'Gather all relevant data and research'
+                        ]
+                    },
+                    {
+                        category: 'aptitude',
+                        question: 'Your memory works best with:',
+                        options: [
+                            'Numbers, formulas, and logical sequences',
+                            'Images, colors, and visual patterns',
+                            'Stories, conversations, and experiences',
+                            'Facts, definitions, and structured information'
+                        ]
+                    },
+                    {
+                        category: 'aptitude',
+                        question: 'In academic subjects, you excel most in:',
+                        options: [
+                            'Mathematics and Physics',
+                            'Art and Design',
+                            'Literature and Social Sciences',
+                            'Science and Research'
+                        ]
+                    },
+                    {
+                        category: 'aptitude',
+                        question: 'Your approach to decision-making is:',
+                        options: [
+                            'Logical analysis of pros and cons',
+                            'Intuition and gut feelings',
+                            'Consulting others and seeking consensus',
+                            'Research-based and data-driven'
+                        ]
+                    },
+                    {
+                        category: 'aptitude',
+                        question: 'You feel most confident when:',
+                        options: [
+                            'Solving technical or analytical problems',
+                            'Creating or designing something new',
+                            'Helping others or working in teams',
+                            'Conducting research or gathering information'
+                        ]
+                    },
+
+                    // Interest Questions (10)
+                    {
+                        category: 'interests',
+                        question: 'Which activity sounds most appealing to you?',
+                        options: [
+                            'Building and programming robots',
+                            'Creating digital art or music',
+                            'Volunteering at a community center',
+                            'Conducting scientific experiments'
+                        ]
+                    },
+                    {
+                        category: 'interests',
+                        question: 'Your ideal weekend would involve:',
+                        options: [
+                            'Working on coding projects or puzzles',
+                            'Attending art exhibitions or creative workshops',
+                            'Organizing social events or helping friends',
+                            'Reading research papers or documentaries'
+                        ]
+                    },
+                    {
+                        category: 'interests',
+                        question: 'Which field excites you the most?',
+                        options: [
+                            'Technology and Engineering',
+                            'Arts and Creative Industries',
+                            'Healthcare and Social Services',
+                            'Research and Academia'
+                        ]
+                    },
+                    {
+                        category: 'interests',
+                        question: 'In your free time, you enjoy:',
+                        options: [
+                            'Building things or fixing mechanical problems',
+                            'Drawing, writing, or other creative pursuits',
+                            'Interacting with people and making connections',
+                            'Learning about new discoveries and innovations'
+                        ]
+                    },
+                    {
+                        category: 'interests',
+                        question: 'Which type of content do you consume most?',
+                        options: [
+                            'Tech blogs and engineering videos',
+                            'Art tutorials and creative content',
+                            'Psychology and social science articles',
+                            'Scientific journals and research publications'
+                        ]
+                    },
+                    {
+                        category: 'interests',
+                        question: 'Your dream job would involve:',
+                        options: [
+                            'Developing innovative technology solutions',
+                            'Creating content that inspires others',
+                            'Making a positive impact on people\'s lives',
+                            'Advancing human knowledge and understanding'
+                        ]
+                    },
+                    {
+                        category: 'interests',
+                        question: 'Which environment energizes you most?',
+                        options: [
+                            'High-tech offices with cutting-edge equipment',
+                            'Creative studios with artistic freedom',
+                            'Collaborative spaces with diverse teams',
+                            'Quiet laboratories or research facilities'
+                        ]
+                    },
+                    {
+                        category: 'interests',
+                        question: 'You are most motivated by:',
+                        options: [
+                            'Solving complex technical challenges',
+                            'Expressing creativity and originality',
+                            'Helping others achieve their goals',
+                            'Discovering new knowledge or insights'
+                        ]
+                    },
+                    {
+                        category: 'interests',
+                        question: 'Which achievement would make you proudest?',
+                        options: [
+                            'Inventing a game-changing technology',
+                            'Creating award-winning artistic work',
+                            'Leading a successful community project',
+                            'Making a significant scientific breakthrough'
+                        ]
+                    },
+                    {
+                        category: 'interests',
+                        question: 'Your interests are primarily driven by:',
+                        options: [
+                            'How things work and can be improved',
+                            'Beauty, aesthetics, and creative expression',
+                            'Human relationships and social dynamics',
+                            'Understanding the natural world and universe'
+                        ]
+                    },
+
+                    // Personality Questions (10)
+                    {
+                        category: 'personality',
+                        question: 'In social situations, you typically:',
+                        options: [
+                            'Take charge and lead conversations',
+                            'Listen actively and ask thoughtful questions',
+                            'Facilitate introductions and connections',
+                            'Observe quietly and contribute when asked'
+                        ]
+                    },
+                    {
+                        category: 'personality',
+                        question: 'Your energy levels are highest when:',
+                        options: [
+                            'Leading a challenging project',
+                            'Working alone on focused tasks',
+                            'Collaborating with a team',
+                            'Learning something completely new'
+                        ]
+                    },
+                    {
+                        category: 'personality',
+                        question: 'You handle stress best by:',
+                        options: [
+                            'Taking immediate action to solve the problem',
+                            'Taking time alone to process and reflect',
+                            'Talking through issues with others',
+                            'Researching and planning multiple solutions'
+                        ]
+                    },
+                    {
+                        category: 'personality',
+                        question: 'Your ideal work pace is:',
+                        options: [
+                            'Fast-paced with tight deadlines',
+                            'Steady and consistent with quality focus',
+                            'Collaborative with flexible timing',
+                            'Self-directed with deep focus periods'
+                        ]
+                    },
+                    {
+                        category: 'personality',
+                        question: 'You feel most fulfilled when:',
+                        options: [
+                            'Achieving ambitious goals and targets',
+                            'Completing detailed, high-quality work',
+                            'Contributing to team success',
+                            'Mastering complex concepts or skills'
+                        ]
+                    },
+                    {
+                        category: 'personality',
+                        question: 'Your communication style is:',
+                        options: [
+                            'Direct and results-oriented',
+                            'Thoughtful and detail-oriented',
+                            'Warm and relationship-focused',
+                            'Analytical and information-rich'
+                        ]
+                    },
+                    {
+                        category: 'personality',
+                        question: 'When starting new projects, you:',
+                        options: [
+                            'Jump in quickly and figure things out',
+                            'Plan thoroughly before beginning',
+                            'Seek input and collaboration from others',
+                            'Research extensively and gather resources'
+                        ]
+                    },
+                    {
+                        category: 'personality',
+                        question: 'You are most comfortable with:',
+                        options: [
+                            'Taking calculated risks for big rewards',
+                            'Steady progress with predictable outcomes',
+                            'Collaborative ventures with shared responsibilities',
+                            'Independent work with minimal supervision'
+                        ]
+                    },
+                    {
+                        category: 'personality',
+                        question: 'Your leadership style tends to be:',
+                        options: [
+                            'Decisive and directive',
+                            'Supportive and empowering',
+                            'Collaborative and inclusive',
+                            'Knowledge-based and consultative'
+                        ]
+                    },
+                    {
+                        category: 'personality',
+                        question: 'You recharge your energy by:',
+                        options: [
+                            'Setting and conquering new challenges',
+                            'Spending quiet time in reflection',
+                            'Connecting with friends and family',
+                            'Engaging in learning and discovery'
+                        ]
+                    },
+
+                    // Academic Preferences (10)
+                    {
+                        category: 'academic',
+                        question: 'Your preferred learning environment is:',
+                        options: [
+                            'Practical workshops and labs',
+                            'Quiet libraries and study spaces',
+                            'Interactive classrooms with discussions',
+                            'Online courses with flexible scheduling'
+                        ]
+                    },
+                    {
+                        category: 'academic',
+                        question: 'You learn best through:',
+                        options: [
+                            'Hands-on practice and application',
+                            'Reading and independent study',
+                            'Group discussions and peer learning',
+                            'Visual aids and multimedia content'
+                        ]
+                    },
+                    {
+                        category: 'academic',
+                        question: 'Your ideal course structure includes:',
+                        options: [
+                            'Project-based assignments and real-world applications',
+                            'In-depth theoretical study and research',
+                            'Collaborative projects and team presentations',
+                            'Flexible modules that allow self-paced learning'
+                        ]
+                    },
+                    {
+                        category: 'academic',
+                        question: 'You prefer academic assessments that are:',
+                        options: [
+                            'Practical demonstrations and skill-based tests',
+                            'Written exams and detailed essays',
+                            'Group projects and peer evaluations',
+                            'Portfolio-based with creative components'
+                        ]
+                    },
+                    {
+                        category: 'academic',
+                        question: 'Your study habits are most effective when:',
+                        options: [
+                            'Following a structured schedule with clear goals',
+                            'Having long, uninterrupted focus sessions',
+                            'Studying with others and discussing concepts',
+                            'Using varied methods and changing environments'
+                        ]
+                    },
+                    {
+                        category: 'academic',
+                        question: 'You are most motivated by academic work that:',
+                        options: [
+                            'Has clear practical applications and outcomes',
+                            'Allows deep exploration of complex topics',
+                            'Involves collaboration and social impact',
+                            'Offers creative freedom and self-expression'
+                        ]
+                    },
+                    {
+                        category: 'academic',
+                        question: 'Your ideal college experience would emphasize:',
+                        options: [
+                            'Industry connections and internship opportunities',
+                            'Research opportunities and academic excellence',
+                            'Campus community and extracurricular activities',
+                            'Flexible programs and diverse course options'
+                        ]
+                    },
+                    {
+                        category: 'academic',
+                        question: 'You handle academic pressure best when:',
+                        options: [
+                            'You can see immediate practical benefits',
+                            'You have adequate time for thorough preparation',
+                            'You have support from peers and mentors',
+                            'You can approach tasks creatively'
+                        ]
+                    },
+                    {
+                        category: 'academic',
+                        question: 'Your academic interests are driven by:',
+                        options: [
+                            'Career prospects and job market demand',
+                            'Personal intellectual curiosity and passion',
+                            'Desire to make a positive social impact',
+                            'Interest in innovation and creative expression'
+                        ]
+                    },
+                    {
+                        category: 'academic',
+                        question: 'After graduation, you envision yourself:',
+                        options: [
+                            'Working in industry with immediate career progression',
+                            'Pursuing advanced studies or research',
+                            'Contributing to community development or social causes',
+                            'Starting your own venture or creative practice'
+                        ]
+                    }
+                ],
+                
+                results: {
+                    topAptitude: '',
+                    topInterest: '',
+                    personalityType: '',
+                    learningStyle: '',
+                    recommendedCareers: [],
+                    recommendedColleges: [],
+                    actionPlan: []
+                },
+
+                get currentCategory() {
+                    return this.questions[this.currentQuestion]?.category || 'aptitude';
+                },
+
+                get totalQuestions() {
+                    return this.questions.length;
+                },
+
+                get progress() {
+                    return (this.currentQuestion / this.totalQuestions) * 100;
+                },
+
+                startAssessment() {
+                    this.assessmentStarted = true;
+                    this.currentQuestion = 0;
+                    this.selectedOption = null;
+                    this.answers = [];
+                },
+
+                getCurrentQuestion() {
+                    return this.questions[this.currentQuestion] || {};
+                },
+
+                getCurrentCategoryIcon() {
+                    const icons = {
+                        aptitude: 'fas fa-brain',
+                        interests: 'fas fa-heart',
+                        personality: 'fas fa-user',
+                        academic: 'fas fa-graduation-cap'
+                    };
+                    return icons[this.currentCategory];
+                },
+
+                getCurrentCategoryName() {
+                    const names = {
+                        aptitude: 'Aptitude Assessment',
+                        interests: 'Interest Exploration',
+                        personality: 'Personality Analysis',
+                        academic: 'Academic Preferences'
+                    };
+                    return names[this.currentCategory];
+                },
+
+                getCurrentCategoryDescription() {
+                    const descriptions = {
+                        aptitude: 'Discovering your natural strengths and cognitive abilities',
+                        interests: 'Exploring what motivates and excites you professionally',
+                        personality: 'Understanding your work style and preferences',
+                        academic: 'Identifying your ideal learning environment and approach'
+                    };
+                    return descriptions[this.currentCategory];
+                },
+
+                selectOption(index) {
+                    this.selectedOption = index;
+                },
+
+                nextQuestion() {
+                    if (this.selectedOption !== null) {
+                        // Store the answer
+                        this.answers.push({
+                            question: this.currentQuestion,
+                            category: this.currentCategory,
+                            answer: this.selectedOption
+                        });
+
+                        if (this.currentQuestion < this.totalQuestions - 1) {
+                            this.currentQuestion++;
+                            this.selectedOption = null;
+                        } else {
+                            this.finishAssessment();
+                        }
+                    }
+                },
+
+                previousQuestion() {
+                    if (this.currentQuestion > 0) {
+                        this.currentQuestion--;
+                        // Restore previous answer
+                        const previousAnswer = this.answers[this.currentQuestion];
+                        this.selectedOption = previousAnswer ? previousAnswer.answer : null;
+                        // Remove the current answer from array
+                        this.answers.pop();
+                    }
+                },
+
+                finishAssessment() {
+                    this.analyzeResults();
+                    this.showResults = true;
+                },
+
+                analyzeResults() {
+                    // Analyze answers by category
+                    const categoryScores = {
+                        aptitude: { analytical: 0, creative: 0, social: 0, research: 0 },
+                        interests: { technology: 0, arts: 0, social: 0, science: 0 },
+                        personality: { leader: 0, detail: 0, team: 0, independent: 0 },
+                        academic: { practical: 0, theoretical: 0, collaborative: 0, flexible: 0 }
+                    };
+
+                    // Score based on answers (option 0 = first trait, option 1 = second trait, etc.)
+                    this.answers.forEach(answer => {
+                        const category = answer.category;
+                        const option = answer.answer;
+                        
+                        if (category === 'aptitude') {
+                            ['analytical', 'creative', 'social', 'research'][option] && categoryScores.aptitude[['analytical', 'creative', 'social', 'research'][option]]++;
+                        } else if (category === 'interests') {
+                            ['technology', 'arts', 'social', 'science'][option] && categoryScores.interests[['technology', 'arts', 'social', 'science'][option]]++;
+                        } else if (category === 'personality') {
+                            ['leader', 'detail', 'team', 'independent'][option] && categoryScores.personality[['leader', 'detail', 'team', 'independent'][option]]++;
+                        } else if (category === 'academic') {
+                            ['practical', 'theoretical', 'collaborative', 'flexible'][option] && categoryScores.academic[['practical', 'theoretical', 'collaborative', 'flexible'][option]]++;
+                        }
+                    });
+
+                    // Determine top traits
+                    this.results.topAptitude = this.getTopTrait(categoryScores.aptitude, {
+                        analytical: 'Analytical Thinking',
+                        creative: 'Creative Problem Solving',
+                        social: 'Social Intelligence',
+                        research: 'Research & Analysis'
+                    });
+
+                    this.results.topInterest = this.getTopTrait(categoryScores.interests, {
+                        technology: 'Technology & Engineering',
+                        arts: 'Creative Arts',
+                        social: 'Social Impact',
+                        science: 'Scientific Research'
+                    });
+
+                    this.results.personalityType = this.getTopTrait(categoryScores.personality, {
+                        leader: 'Natural Leader',
+                        detail: 'Detail-Oriented',
+                        team: 'Team Collaborator',
+                        independent: 'Independent Thinker'
+                    });
+
+                    this.results.learningStyle = this.getTopTrait(categoryScores.academic, {
+                        practical: 'Practical Application',
+                        theoretical: 'Theoretical Depth',
+                        collaborative: 'Collaborative Learning',
+                        flexible: 'Flexible & Creative'
+                    });
+
+                    // Generate recommendations based on profile
+                    this.generateCareerRecommendations();
+                    this.generateCollegeRecommendations();
+                    this.generateActionPlan();
+                },
+
+                getTopTrait(scores, labels) {
+                    let maxScore = 0;
+                    let topTrait = '';
+                    
+                    Object.entries(scores).forEach(([trait, score]) => {
+                        if (score > maxScore) {
+                            maxScore = score;
+                            topTrait = trait;
+                        }
+                    });
+                    
+                    return labels[topTrait] || labels[Object.keys(labels)[0]];
+                },
+
+                generateCareerRecommendations() {
+                    // Sample recommendations based on profile combination
+                    const careerDatabase = {
+                        'Analytical Thinking + Technology & Engineering': [
+                            { title: 'Software Engineer', match: 95, description: 'Design and develop software applications and systems', education: 'Computer Science or IT' },
+                            { title: 'Data Scientist', match: 90, description: 'Analyze complex data to drive business decisions', education: 'Computer Science, Statistics, or Mathematics' },
+                            { title: 'Cybersecurity Analyst', match: 85, description: 'Protect organizations from digital threats', education: 'Cybersecurity or Computer Science' }
+                        ],
+                        'Creative Problem Solving + Creative Arts': [
+                            { title: 'UX/UI Designer', match: 95, description: 'Create intuitive and beautiful user experiences', education: 'Design, HCI, or Fine Arts' },
+                            { title: 'Digital Marketing Specialist', match: 90, description: 'Develop creative marketing campaigns', education: 'Marketing, Communications, or Design' },
+                            { title: 'Graphic Designer', match: 88, description: 'Create visual content for various media', education: 'Graphic Design or Fine Arts' }
+                        ],
+                        'Social Intelligence + Social Impact': [
+                            { title: 'Clinical Psychologist', match: 93, description: 'Help individuals overcome mental health challenges', education: 'Psychology and Clinical Training' },
+                            { title: 'Human Resources Manager', match: 89, description: 'Manage organizational culture and employee relations', education: 'HR, Psychology, or Business' },
+                            { title: 'Social Worker', match: 87, description: 'Support individuals and communities in need', education: 'Social Work or Sociology' }
+                        ]
+                    };
+
+                    const profileKey = `${this.results.topAptitude} + ${this.results.topInterest}`;
+                    this.results.recommendedCareers = careerDatabase[profileKey] || [
+                        { title: 'Project Manager', match: 85, description: 'Coordinate teams and resources to deliver projects', education: 'Business, Engineering, or relevant field' },
+                        { title: 'Consultant', match: 82, description: 'Provide expert advice to organizations', education: 'MBA or specialized field expertise' },
+                        { title: 'Entrepreneur', match: 80, description: 'Start and manage your own business venture', education: 'Business or relevant field' }
+                    ];
+                },
+
+                generateCollegeRecommendations() {
+                    // Sample college recommendations
+                    this.results.recommendedColleges = [
+                        { name: 'Indian Institute of Technology (IIT)', course: 'Computer Science Engineering', location: 'Multiple Locations', type: 'Government' },
+                        { name: 'Delhi University', course: 'Bachelor of Computer Applications', location: 'New Delhi', type: 'Government' },
+                        { name: 'Jawaharlal Nehru University', course: 'Bachelor of Technology', location: 'New Delhi', type: 'Government' },
+                        { name: 'University of Hyderabad', course: 'Integrated Master\'s Program', location: 'Hyderabad', type: 'Government' }
+                    ];
+                },
+
+                generateActionPlan() {
+                    this.results.actionPlan = [
+                        { title: 'Research Your Top Career Choices', description: 'Deep dive into the day-to-day responsibilities, career growth, and industry trends for your recommended careers.' },
+                        { title: 'Explore Admission Requirements', description: 'Check eligibility criteria, entrance exams, and application deadlines for your target colleges and courses.' },
+                        { title: 'Build Relevant Skills', description: 'Start developing skills specific to your chosen field through online courses, projects, or internships.' },
+                        { title: 'Connect with Professionals', description: 'Reach out to professionals in your areas of interest through LinkedIn or local networking events.' },
+                        { title: 'Create a Study Plan', description: 'Prepare for entrance exams and maintain strong academic performance in relevant subjects.' }
+                    ];
+                },
+
+                getTopAptitude() {
+                    const aptitudes = ['Analytical', 'Creative', 'Social', 'Research'];
+                    return aptitudes[Math.floor(Math.random() * aptitudes.length)];
+                },
+
+                getTopInterest() {
+                    const interests = ['Technology', 'Arts', 'Healthcare', 'Science'];
+                    return interests[Math.floor(Math.random() * interests.length)];
+                },
+
+                getLearningStyle() {
+                    const styles = ['Practical', 'Theoretical', 'Collaborative', 'Independent'];
+                    return styles[Math.floor(Math.random() * styles.length)];
+                },
+
+                saveAndExit() {
+                    if (confirm('Are you sure you want to exit? Your progress will be saved.')) {
+                        // In a real application, you would save progress to backend
+                        window.location.href = 'index.html';
+                    }
+                },
+
+                downloadReport() {
+                    // In a real application, this would generate and download a PDF report
+                    alert('Your detailed career assessment report is being prepared. You will receive it via email shortly.');
+                },
+
+                exploreColleges() {
+                    // Navigate to college exploration page
+                    window.location.href = 'colleges.html';
+                }
+            }
+        }
+    </script>
+</body>
+</html>
