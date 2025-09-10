@@ -1,0 +1,672 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>EduPath Dashboard - Your Learning Hub</title>
+    <script src="https://cdn.jsdelivr.net/npm/@tailwindcss/browser@4"></script>
+    <script defer src="https://cdn.jsdelivr.net/npm/@alpinejs/intersect@3.x.x/dist/cdn.min.js"></script>
+    <script defer src="https://cdn.jsdelivr.net/npm/alpinejs@3.x.x/dist/cdn.min.js"></script>
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.0.0/css/all.min.css">
+    <script src="https://cdn.jsdelivr.net/npm/chart.js"></script>
+    <style>
+        @import url('https://fonts.googleapis.com/css2?family=Space+Grotesk:wght@300;400;500;600;700&display=swap');
+        @import url('https://fonts.googleapis.com/css2?family=Syne:wght@400;500;600;700;800&display=swap');
+        
+        body {
+            font-family: 'Space Grotesk', sans-serif;
+            background: linear-gradient(135deg, #f5f7fa 0%, #c3cfe2 100%);
+            min-height: 100vh;
+        }
+        
+        .font-display {
+            font-family: 'Syne', sans-serif;
+        }
+        
+        [x-cloak] { display: none !important; }
+        
+        .glass-card {
+            background: rgba(255, 255, 255, 0.25);
+            backdrop-filter: blur(20px);
+            border: 1px solid rgba(255, 255, 255, 0.18);
+            box-shadow: 0 8px 32px 0 rgba(31, 38, 135, 0.37);
+        }
+        
+        .morph-card {
+            background: #ffffff;
+            border-radius: 20px;
+            box-shadow: 
+                20px 20px 60px #d9d9d9,
+                -20px -20px 60px #ffffff,
+                inset 0px 0px 0px rgba(255, 255, 255, 0.1);
+            border: 1px solid rgba(255, 255, 255, 0.2);
+        }
+        
+        .morph-inset {
+            background: linear-gradient(145deg, #e6e6e6, #ffffff);
+            box-shadow: 
+                inset 20px 20px 60px #d9d9d9,
+                inset -20px -20px 60px #ffffff;
+        }
+        
+        .gradient-primary {
+            background: linear-gradient(135deg, #4F46E5 0%, #7C3AED 50%, #EC4899 100%);
+        }
+        
+        .gradient-secondary {
+            background: linear-gradient(135deg, #667eea 0%, #764ba2 100%);
+        }
+        
+        .gradient-success {
+            background: linear-gradient(135deg, #10B981 0%, #059669 100%);
+        }
+        
+        .gradient-warning {
+            background: linear-gradient(135deg, #F59E0B 0%, #D97706 100%);
+        }
+        
+        .text-gradient {
+            background: linear-gradient(90deg, #4F46E5, #EC4899);
+            -webkit-background-clip: text;
+            background-clip: text;
+            color: transparent;
+        }
+        
+        .text-gradient-purple {
+            background: linear-gradient(90deg, #7C3AED, #3B82F6);
+            -webkit-background-clip: text;
+            background-clip: text;
+            color: transparent;
+        }
+        
+        .animate-float {
+            animation: float 6s ease-in-out infinite;
+        }
+        
+        .animate-pulse-soft {
+            animation: pulse-soft 2s cubic-bezier(0.4, 0, 0.6, 1) infinite;
+        }
+        
+        @keyframes float {
+            0% { transform: translateY(0px); }
+            50% { transform: translateY(-10px); }
+            100% { transform: translateY(0px); }
+        }
+        
+        @keyframes pulse-soft {
+            0%, 100% { opacity: 1; }
+            50% { opacity: 0.7; }
+        }
+        
+        .card-hover {
+            transition: all 0.3s cubic-bezier(0.25, 0.8, 0.25, 1);
+        }
+        
+        .card-hover:hover {
+            transform: translateY(-5px);
+            box-shadow: 
+                25px 25px 80px #d0d0d0,
+                -25px -25px 80px #ffffff;
+        }
+        
+        .progress-ring {
+            transform: rotate(-90deg);
+        }
+        
+        .progress-ring-circle {
+            stroke-dasharray: 251.2;
+            stroke-dashoffset: 251.2;
+            transition: stroke-dashoffset 1s ease-in-out;
+        }
+        
+        .sidebar-link {
+            position: relative;
+            transition: all 0.3s ease;
+        }
+        
+        .sidebar-link:hover {
+            transform: translateX(4px);
+        }
+        
+        .sidebar-link::before {
+            content: '';
+            position: absolute;
+            left: -16px;
+            top: 50%;
+            transform: translateY(-50%);
+            width: 4px;
+            height: 0;
+            background: linear-gradient(135deg, #4F46E5, #EC4899);
+            border-radius: 2px;
+            transition: height 0.3s ease;
+        }
+        
+        .sidebar-link:hover::before,
+        .sidebar-link.active::before {
+            height: 100%;
+        }
+        
+        .notification-dot {
+            position: relative;
+        }
+        
+        .notification-dot::after {
+            content: '';
+            position: absolute;
+            top: -2px;
+            right: -2px;
+            width: 8px;
+            height: 8px;
+            background: #EF4444;
+            border-radius: 50%;
+            border: 2px solid white;
+        }
+        
+        .stat-card {
+            position: relative;
+            overflow: hidden;
+        }
+        
+        .stat-card::before {
+            content: '';
+            position: absolute;
+            top: 0;
+            left: 0;
+            right: 0;
+            height: 4px;
+            background: linear-gradient(90deg, #4F46E5, #EC4899);
+        }
+        
+        /* Custom scrollbar */
+        .custom-scrollbar::-webkit-scrollbar {
+            width: 6px;
+        }
+        
+        .custom-scrollbar::-webkit-scrollbar-track {
+            background: #f1f1f1;
+            border-radius: 10px;
+        }
+        
+        .custom-scrollbar::-webkit-scrollbar-thumb {
+            background: linear-gradient(135deg, #4F46E5, #EC4899);
+            border-radius: 10px;
+        }
+        
+        .custom-scrollbar::-webkit-scrollbar-thumb:hover {
+            background: linear-gradient(135deg, #3B82F6, #EC4899);
+        }
+        
+        /* Mobile menu animation */
+        @media (max-width: 768px) {
+            .mobile-menu-enter {
+                animation: slideInLeft 0.3s ease-out;
+            }
+            
+            .mobile-menu-leave {
+                animation: slideOutLeft 0.3s ease-in;
+            }
+        }
+        
+        @keyframes slideInLeft {
+            from { transform: translateX(-100%); }
+            to { transform: translateX(0); }
+        }
+        
+        @keyframes slideOutLeft {
+            from { transform: translateX(0); }
+            to { transform: translateX(-100%); }
+        }
+        
+        /* Chart container styling */
+        .chart-container {
+            position: relative;
+            height: 300px;
+            width: 100%;
+        }
+        
+        /* Task progress bar */
+        .progress-bar {
+            background: linear-gradient(90deg, #E5E7EB 0%, #E5E7EB 100%);
+            border-radius: 10px;
+            overflow: hidden;
+        }
+        
+        .progress-fill {
+            background: linear-gradient(90deg, #4F46E5 0%, #EC4899 100%);
+            height: 100%;
+            border-radius: 10px;
+            transition: width 1s ease-in-out;
+        }
+    </style>
+</head>
+<body class="bg-gray-50" x-data="dashboardData()">
+    
+    <!-- Mobile Menu Backdrop -->
+    <div 
+        x-show="mobileMenuOpen" 
+        x-cloak
+        @click="mobileMenuOpen = false"
+        class="fixed inset-0 bg-black bg-opacity-50 z-40 lg:hidden"
+        x-transition:enter="transition-opacity ease-linear duration-300"
+        x-transition:enter-start="opacity-0"
+        x-transition:enter-end="opacity-100"
+        x-transition:leave="transition-opacity ease-linear duration-300"
+        x-transition:leave-start="opacity-100"
+        x-transition:leave-end="opacity-0"
+    ></div>
+
+    <div class="flex h-screen bg-gray-50">
+        
+        <!-- Sidebar -->
+        <div 
+            class="fixed inset-y-0 left-0 z-50 w-64 bg-white shadow-xl transform lg:translate-x-0 lg:static lg:inset-0 custom-scrollbar overflow-y-auto"
+            :class="{ 'translate-x-0 mobile-menu-enter': mobileMenuOpen, '-translate-x-full': !mobileMenuOpen }"
+            x-cloak
+        >
+            <div class="flex flex-col h-full">
+                
+                <!-- Logo -->
+                <div class="flex items-center justify-between px-6 py-6 border-b border-gray-100">
+                    <a href="#" class="font-display font-bold text-2xl tracking-tighter">
+                        Edu<span class="text-gradient">Path</span>
+                    </a>
+                    <button 
+                        @click="mobileMenuOpen = false"
+                        class="lg:hidden text-gray-400 hover:text-gray-600"
+                    >
+                        <i class="fas fa-times text-xl"></i>
+                    </button>
+                </div>
+                
+                <!-- User Profile -->
+                <div class="px-6 py-6 border-b border-gray-100">
+                    <div class="flex items-center space-x-3">
+                        <div class="relative">
+                            <img src="https://images.unsplash.com/photo-1472099645785-5658abf4ff4e?ixlib=rb-4.0.3&auto=format&fit=crop&w=150&q=80" 
+                                 alt="Profile" 
+                                 class="w-12 h-12 rounded-full border-2 border-gradient-primary object-cover">
+                            <div class="absolute -bottom-1 -right-1 w-4 h-4 bg-green-400 rounded-full border-2 border-white"></div>
+                        </div>
+                        <div>
+                            <h3 class="font-semibold text-gray-900" x-text="user.name">Arjun Sharma</h3>
+                            <p class="text-sm text-gray-500" x-text="user.grade">Class 12 - Science</p>
+                        </div>
+                    </div>
+                </div>
+                
+                <!-- Navigation -->
+                <nav class="flex-1 px-4 py-6 space-y-2">
+                    <template x-for="item in navigation" :key="item.name">
+                        <a 
+                            href="#" 
+                            class="sidebar-link flex items-center px-4 py-3 text-gray-700 rounded-lg hover:bg-gray-50 group"
+                            :class="{ 'active bg-indigo-50 text-indigo-700': activeTab === item.key }"
+                            @click="setActiveTab(item.key)"
+                        >
+                            <i :class="item.icon" class="mr-3 text-lg"></i>
+                            <span x-text="item.name" class="font-medium"></span>
+                            <span 
+                                x-show="item.badge" 
+                                x-text="item.badge"
+                                class="ml-auto px-2 py-1 text-xs bg-red-100 text-red-600 rounded-full"
+                            ></span>
+                        </a>
+                    </template>
+                </nav>
+                
+                <!-- Bottom Actions -->
+                <div class="px-4 py-6 border-t border-gray-100 space-y-2">
+                    <a href="#" class="sidebar-link flex items-center px-4 py-3 text-gray-700 rounded-lg hover:bg-gray-50">
+                        <i class="fas fa-cog mr-3 text-lg"></i>
+                        <span class="font-medium">Settings</span>
+                    </a>
+                    <a href="#" class="sidebar-link flex items-center px-4 py-3 text-gray-700 rounded-lg hover:bg-gray-50">
+                        <i class="fas fa-sign-out-alt mr-3 text-lg"></i>
+                        <span class="font-medium">Logout</span>
+                    </a>
+                </div>
+            </div>
+        </div>
+        
+        <!-- Main Content -->
+        <div class="flex-1 flex flex-col overflow-hidden">
+            
+            <!-- Top Header -->
+            <header class="bg-white shadow-sm border-b border-gray-100 px-6 py-4">
+                <div class="flex items-center justify-between">
+                    <div class="flex items-center">
+                        <button 
+                            @click="mobileMenuOpen = true"
+                            class="lg:hidden text-gray-500 hover:text-gray-700 mr-4"
+                        >
+                            <i class="fas fa-bars text-xl"></i>
+                        </button>
+                        <div>
+                            <h1 class="text-2xl font-display font-bold text-gray-900">Good morning, <span x-text="user.firstName">Arjun</span>! 👋</h1>
+                            <p class="text-gray-600">Ready to explore your future today?</p>
+                        </div>
+                    </div>
+                    
+                    <div class="flex items-center space-x-4">
+                        <!-- Search -->
+                        <div class="relative hidden md:block">
+                            <input 
+                                type="text" 
+                                placeholder="Search colleges, courses..."
+                                class="w-80 px-4 py-2 pl-10 pr-4 border border-gray-200 rounded-full focus:outline-none focus:ring-2 focus:ring-indigo-500 focus:border-transparent"
+                            >
+                            <i class="fas fa-search absolute left-3 top-1/2 transform -translate-y-1/2 text-gray-400"></i>
+                        </div>
+                        
+                        <!-- Notifications -->
+                        <button class="relative p-2 text-gray-400 hover:text-gray-600 notification-dot">
+                            <i class="fas fa-bell text-xl"></i>
+                        </button>
+                        
+                        <!-- Messages -->
+                        <button class="relative p-2 text-gray-400 hover:text-gray-600">
+                            <i class="fas fa-envelope text-xl"></i>
+                        </button>
+                    </div>
+                </div>
+            </header>
+            
+            <!-- Dashboard Content -->
+            <main class="flex-1 overflow-x-hidden overflow-y-auto bg-gray-50 p-6 custom-scrollbar">
+                
+                <!-- Stats Cards -->
+                <div class="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-4 gap-6 mb-8">
+                    <template x-for="stat in stats" :key="stat.title">
+                        <div class="morph-card p-6 card-hover stat-card">
+                            <div class="flex items-center justify-between">
+                                <div>
+                                    <p class="text-sm font-medium text-gray-600" x-text="stat.title"></p>
+                                    <p class="text-3xl font-bold text-gray-900 mt-1" x-text="stat.value"></p>
+                                    <p class="text-sm text-green-600 mt-1">
+                                        <i class="fas fa-arrow-up"></i>
+                                        <span x-text="stat.change"></span> from last week
+                                    </p>
+                                </div>
+                                <div :class="stat.iconBg" class="p-3 rounded-2xl">
+                                    <i :class="stat.icon" class="text-xl text-white"></i>
+                                </div>
+                            </div>
+                        </div>
+                    </template>
+                </div>
+                
+                <!-- Quick Actions -->
+                <div class="grid grid-cols-1 lg:grid-cols-3 gap-6 mb-8">
+                    
+                    <!-- Assessment Progress -->
+                    <div class="lg:col-span-2 morph-card p-6 card-hover">
+                        <div class="flex items-center justify-between mb-6">
+                            <h3 class="text-xl font-display font-bold text-gray-900">Your Assessment Journey</h3>
+                            <span class="text-sm text-gray-500">3 of 5 completed</span>
+                        </div>
+                        
+                        <div class="space-y-4">
+                            <template x-for="assessment in assessments" :key="assessment.name">
+                                <div class="flex items-center justify-between p-4 bg-gray-50 rounded-xl">
+                                    <div class="flex items-center space-x-4">
+                                        <div :class="assessment.completed ? 'gradient-success' : 'bg-gray-300'" 
+                                             class="w-10 h-10 rounded-full flex items-center justify-center">
+                                            <i :class="assessment.completed ? 'fas fa-check' : 'fas fa-lock'" 
+                                               class="text-white text-sm"></i>
+                                        </div>
+                                        <div>
+                                            <h4 class="font-semibold text-gray-900" x-text="assessment.name"></h4>
+                                            <p class="text-sm text-gray-600" x-text="assessment.description"></p>
+                                        </div>
+                                    </div>
+                                    <div class="text-right">
+                                        <p class="text-sm font-medium" x-text="assessment.duration"></p>
+                                        <button 
+                                            :class="assessment.completed ? 'bg-green-100 text-green-700' : 'gradient-primary text-white'"
+                                            class="px-4 py-2 rounded-lg text-sm font-medium mt-2 hover:scale-105 transition-transform"
+                                            x-text="assessment.completed ? 'View Results' : 'Start Test'"
+                                        ></button>
+                                    </div>
+                                </div>
+                            </template>
+                        </div>
+                    </div>
+                    
+                    <!-- Progress Circle -->
+                    <div class="morph-card p-6 card-hover text-center">
+                        <h3 class="text-lg font-display font-bold text-gray-900 mb-4">Overall Progress</h3>
+                        
+                        <div class="relative inline-flex items-center justify-center">
+                            <svg class="w-32 h-32 progress-ring">
+                                <circle 
+                                    cx="64" 
+                                    cy="64" 
+                                    r="40" 
+                                    stroke="#E5E7EB" 
+                                    stroke-width="8" 
+                                    fill="transparent"
+                                />
+                                <circle 
+                                    cx="64" 
+                                    cy="64" 
+                                    r="40" 
+                                    stroke="url(#gradient)" 
+                                    stroke-width="8" 
+                                    fill="transparent"
+                                    class="progress-ring-circle"
+                                    :style="`stroke-dashoffset: ${251.2 - (251.2 * 60) / 100}`"
+                                />
+                                <defs>
+                                    <linearGradient id="gradient" x1="0%" y1="0%" x2="100%" y2="0%">
+                                        <stop offset="0%" style="stop-color:#4F46E5"/>
+                                        <stop offset="100%" style="stop-color:#EC4899"/>
+                                    </linearGradient>
+                                </defs>
+                            </svg>
+                            <div class="absolute inset-0 flex items-center justify-center">
+                                <div class="text-center">
+                                    <div class="text-2xl font-bold text-gray-900">60%</div>
+                                    <div class="text-sm text-gray-600">Complete</div>
+                                </div>
+                            </div>
+                        </div>
+                        
+                        <p class="text-sm text-gray-600 mt-4">You're making great progress! Keep going to unlock personalized recommendations.</p>
+                        
+                        <button class="w-full gradient-primary text-white font-semibold py-3 rounded-xl mt-4 hover:scale-105 transition-transform">
+                            Continue Assessment
+                        </button>
+                    </div>
+                </div>
+                
+                <!-- Recommendations & Activity -->
+                <div class="grid grid-cols-1 lg:grid-cols-2 gap-6 mb-8">
+                    
+                    <!-- College Recommendations -->
+                    <div class="morph-card p-6 card-hover">
+                        <div class="flex items-center justify-between mb-6">
+                            <h3 class="text-xl font-display font-bold text-gray-900">Recommended Colleges</h3>
+                            <a href="#" class="text-indigo-600 hover:text-indigo-700 font-medium text-sm">View All</a>
+                        </div>
+                        
+                        <div class="space-y-4">
+                            <template x-for="college in recommendedColleges.slice(0, 3)" :key="college.name">
+                                <div class="flex items-center space-x-4 p-4 bg-gray-50 rounded-xl hover:bg-gray-100 transition-colors cursor-pointer">
+                                    <img :src="college.image" :alt="college.name" class="w-12 h-12 rounded-lg object-cover">
+                                    <div class="flex-1">
+                                        <h4 class="font-semibold text-gray-900" x-text="college.name"></h4>
+                                        <p class="text-sm text-gray-600" x-text="college.location"></p>
+                                        <div class="flex items-center mt-1">
+                                            <div class="flex text-yellow-400">
+                                                <template x-for="i in 5" :key="i">
+                                                    <i :class="i <= college.rating ? 'fas fa-star' : 'far fa-star'" class="text-xs"></i>
+                                                </template>
+                                            </div>
+                                            <span class="text-xs text-gray-500 ml-2" x-text="`${college.rating}/5`"></span>
+                                        </div>
+                                    </div>
+                                    <div class="text-right">
+                                        <p class="text-sm font-semibold text-indigo-600" x-text="`${college.match}% Match`"></p>
+                                        <i class="fas fa-chevron-right text-gray-400 text-sm mt-1"></i>
+                                    </div>
+                                </div>
+                            </template>
+                        </div>
+                    </div>
+                    
+                    <!-- Recent Activity -->
+                    <div class="morph-card p-6 card-hover">
+                        <div class="flex items-center justify-between mb-6">
+                            <h3 class="text-xl font-display font-bold text-gray-900">Recent Activity</h3>
+                            <a href="#" class="text-indigo-600 hover:text-indigo-700 font-medium text-sm">View All</a>
+                        </div>
+                        
+                        <div class="space-y-4">
+                            <template x-for="activity in recentActivity" :key="activity.id">
+                                <div class="flex items-start space-x-4">
+                                    <div :class="activity.iconBg" class="w-8 h-8 rounded-full flex items-center justify-center flex-shrink-0">
+                                        <i :class="activity.icon" class="text-white text-xs"></i>
+                                    </div>
+                                    <div class="flex-1">
+                                        <p class="text-sm text-gray-900" x-text="activity.title"></p>
+                                        <p class="text-xs text-gray-500" x-text="activity.time"></p>
+                                    </div>
+                                </div>
+                            </template>
+                        </div>
+                    </div>
+                </div>
+                
+                <!-- Career Path Visualization -->
+                <div class="morph-card p-6 card-hover mb-8">
+                    <div class="flex items-center justify-between mb-6">
+                        <h3 class="text-xl font-display font-bold text-gray-900">Your Potential Career Paths</h3>
+                        <button class="text-indigo-600 hover:text-indigo-700 font-medium text-sm">Explore More</button>
+                    </div>
+                    
+                    <div class="grid grid-cols-1 md:grid-cols-3 gap-6">
+                        <template x-for="path in careerPaths" :key="path.title">
+                            <div class="text-center p-6 bg-gradient-to-br from-gray-50 to-gray-100 rounded-2xl hover:shadow-lg transition-shadow cursor-pointer">
+                                <div :class="path.iconBg" class="w-16 h-16 rounded-2xl flex items-center justify-center mx-auto mb-4">
+                                    <i :class="path.icon" class="text-2xl text-white"></i>
+                                </div>
+                                <h4 class="font-bold text-gray-900 mb-2" x-text="path.title"></h4>
+                                <p class="text-sm text-gray-600 mb-4" x-text="path.description"></p>
+                                <div class="space-y-2">
+                                    <div class="flex justify-between text-xs">
+                                        <span class="text-gray-500">Match Score</span>
+                                        <span class="font-semibold" x-text="`${path.match}%`"></span>
+                                    </div>
+                                    <div class="progress-bar h-2">
+                                        <div class="progress-fill" :style="`width: ${path.match}%`"></div>
+                                    </div>
+                                </div>
+                                <p class="text-xs text-gray-500 mt-3" x-text="`Avg. Salary: ${path.salary}`"></p>
+                            </div>
+                        </template>
+                    </div>
+                </div>
+                
+                <!-- Quick Links -->
+                <div class="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-4 gap-4">
+                    <template x-for="link in quickLinks" :key="link.title">
+                        <a href="#" class="morph-card p-4 card-hover text-center hover:scale-105 transition-transform">
+                            <div :class="link.iconBg" class="w-12 h-12 rounded-xl flex items-center justify-center mx-auto mb-3">
+                                <i :class="link.icon" class="text-xl text-white"></i>
+                            </div>
+                            <h4 class="font-semibold text-gray-900 text-sm" x-text="link.title"></h4>
+                            <p class="text-xs text-gray-600 mt-1" x-text="link.subtitle"></p>
+                        </a>
+                    </template>
+                </div>
+            </main>
+        </div>
+    </div>
+
+    <script>
+        function dashboardData() {
+            return {
+                mobileMenuOpen: false,
+                activeTab: 'dashboard',
+                user: {
+                    name: 'Arjun Sharma',
+                    firstName: 'Arjun',
+                    grade: 'Class 12 - Science'
+                },
+                navigation: [
+                    { name: 'Dashboard', icon: 'fas fa-home', key: 'dashboard' },
+                    { name: 'Assessment', icon: 'fas fa-brain', key: 'assessment', badge: '2' },
+                    { name: 'Colleges', icon: 'fas fa-university', key: 'colleges' },
+                    { name: 'Career Paths', icon: 'fas fa-route', key: 'careers' },
+                    { name: 'Applications', icon: 'fas fa-file-alt', key: 'applications', badge: '3' },
+                    { name: 'Resources', icon: 'fas fa-book', key: 'resources' },
+                    { name: 'Profile', icon: 'fas fa-user', key: 'profile' }
+                ],
+                stats: [
+                    {
+                        title: 'Assessment Progress',
+                        value: '60%',
+                        change: '+12%',
+                        icon: 'fas fa-chart-line',
+                        iconBg: 'gradient-primary'
+                    },
+                    {
+                        title: 'Colleges Explored',
+                        value: '47',
+                        change: '+23%',
+                        icon: 'fas fa-university',
+                        iconBg: 'gradient-secondary'
+                    },
+                    {
+                        title: 'Career Matches',
+                        value: '12',
+                        change: '+5%',
+                        icon: 'fas fa-bullseye',
+                        iconBg: 'gradient-success'
+                    },{
+                        title: 'Applications',
+                        value: '3',
+                        change: '+3',
+                        icon: 'fas fa-paper-plane',
+                        iconBg: 'gradient-warning'
+                    }
+                ],
+                assessments: [
+                    { name: 'Basic Info', description: 'Tell us about your background', duration: '2 min', completed: true },
+                    { name: 'Aptitude Test', description: 'Check your analytical skills', duration: '10 min', completed: true },
+                    { name: 'Interests Survey', description: 'What subjects excite you?', duration: '5 min', completed: true },
+                    { name: 'Personality Test', description: 'Understand your traits', duration: '8 min', completed: false },
+                    { name: 'Final Assessment', description: 'Get your personalized results', duration: '15 min', completed: false }
+                ],
+                recommendedColleges: [
+                    { name: 'IIT Delhi', location: 'New Delhi', rating: 5, match: 92, image: 'https://source.unsplash.com/80x80/?college,delhi' },
+                    { name: 'BITS Pilani', location: 'Rajasthan', rating: 4, match: 88, image: 'https://source.unsplash.com/80x80/?university,india' },
+                    { name: 'SRCC', location: 'New Delhi', rating: 4, match: 85, image: 'https://source.unsplash.com/80x80/?campus,students' },
+                    { name: 'NIT Trichy', location: 'Tamil Nadu', rating: 5, match: 80, image: 'https://source.unsplash.com/80x80/?institute,india' }
+                ],
+                recentActivity: [
+                    { id: 1, title: 'Completed Aptitude Test', time: '2h ago', icon: 'fas fa-brain', iconBg: 'gradient-primary' },
+                    { id: 2, title: 'Viewed IIT Delhi Profile', time: '1d ago', icon: 'fas fa-university', iconBg: 'gradient-secondary' },
+                    { id: 3, title: 'Applied to BITS Pilani', time: '3d ago', icon: 'fas fa-paper-plane', iconBg: 'gradient-warning' },
+                    { id: 4, title: 'Explored Career in Data Science', time: '1w ago', icon: 'fas fa-laptop-code', iconBg: 'gradient-success' }
+                ],
+                careerPaths: [
+                    { title: 'Software Engineer', description: 'Build apps, systems, and platforms.', match: 85, salary: '₹10-15 LPA', icon: 'fas fa-laptop-code', iconBg: 'gradient-primary' },
+                    { title: 'Data Scientist', description: 'Work with data & AI models.', match: 78, salary: '₹12-18 LPA', icon: 'fas fa-database', iconBg: 'gradient-success' },
+                    { title: 'Civil Engineer', description: 'Design and build infrastructure.', match: 72, salary: '₹6-10 LPA', icon: 'fas fa-building', iconBg: 'gradient-warning' }
+                ],
+                quickLinks: [
+                    { title: 'Practice Tests', subtitle: 'Sharpen your skills', icon: 'fas fa-pencil-alt', iconBg: 'gradient-primary' },
+                    { title: 'Scholarships', subtitle: 'Find financial aid', icon: 'fas fa-hand-holding-usd', iconBg: 'gradient-success' },
+                    { title: 'Career Guides', subtitle: 'Explore industries', icon: 'fas fa-briefcase', iconBg: 'gradient-secondary' },
+                    { title: 'Workshops', subtitle: 'Learn from experts', icon: 'fas fa-chalkboard-teacher', iconBg: 'gradient-warning' }
+                ],
+                setActiveTab(tab) {
+                    this.activeTab = tab;
+                }
+            }
+        }
+    </script>
+</body>
+</html>
+                    

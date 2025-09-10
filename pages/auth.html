@@ -1,0 +1,496 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>EduPath - Login & Register</title>
+    <script src="https://cdn.jsdelivr.net/npm/@tailwindcss/browser@4"></script>
+    <script defer src="https://cdn.jsdelivr.net/npm/alpinejs@3.x.x/dist/cdn.min.js"></script>
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.0.0/css/all.min.css">
+    <style>
+        @import url('https://fonts.googleapis.com/css2?family=Space+Grotesk:wght@300;400;500;600;700&display=swap');
+        @import url('https://fonts.googleapis.com/css2?family=Syne:wght@400;500;600;700;800&display=swap');
+        
+        body {
+            font-family: 'Space Grotesk', sans-serif;
+            background: linear-gradient(135deg, #667eea 0%, #764ba2 100%);
+            min-height: 100vh;
+        }
+        
+        .font-display {
+            font-family: 'Syne', sans-serif;
+        }
+        
+        [x-cloak] { display: none !important; }
+        
+        .glass-card {
+            background: rgba(255, 255, 255, 0.1);
+            backdrop-filter: blur(20px);
+            border: 1px solid rgba(255, 255, 255, 0.2);
+            box-shadow: 0 8px 32px 0 rgba(31, 38, 135, 0.37);
+        }
+        
+        .morph-bg {
+            border-radius: 20px;
+            background: #ffffff;
+            box-shadow: 20px 20px 60px #d9d9d9, -20px -20px 60px #ffffff;
+        }
+        
+        .text-gradient {
+            background: linear-gradient(90deg, #4F46E5, #EC4899);
+            -webkit-background-clip: text;
+            background-clip: text;
+            color: transparent;
+        }
+        
+        .bg-gradient {
+            background: linear-gradient(135deg, #4F46E5, #EC4899);
+        }
+        
+        .animate-float {
+            animation: float 6s ease-in-out infinite;
+        }
+        
+        @keyframes float {
+            0% { transform: translateY(0px); }
+            50% { transform: translateY(-20px); }
+            100% { transform: translateY(0px); }
+        }
+        
+        .input-group {
+            position: relative;
+        }
+        
+        .input-group input {
+            transition: all 0.3s ease;
+        }
+        
+        .input-group input:focus {
+            transform: translateY(-2px);
+            box-shadow: 0 8px 25px rgba(0, 0, 0, 0.1);
+        }
+        
+        .btn-primary {
+            background: linear-gradient(135deg, #667eea 0%, #764ba2 100%);
+            transition: all 0.3s ease;
+        }
+        
+        .btn-primary:hover {
+            transform: translateY(-2px);
+            box-shadow: 0 10px 25px rgba(0, 0, 0, 0.2);
+        }
+        
+        .social-btn {
+            transition: all 0.3s ease;
+        }
+        
+        .social-btn:hover {
+            transform: translateY(-2px);
+            box-shadow: 0 8px 20px rgba(0, 0, 0, 0.1);
+        }
+        
+        .form-slide-enter {
+            animation: slideInRight 0.5s ease-out;
+        }
+        
+        .form-slide-leave {
+            animation: slideOutLeft 0.5s ease-out;
+        }
+        
+        @keyframes slideInRight {
+            from {
+                opacity: 0;
+                transform: translateX(100px);
+            }
+            to {
+                opacity: 1;
+                transform: translateX(0);
+            }
+        }
+        
+        @keyframes slideOutLeft {
+            from {
+                opacity: 1;
+                transform: translateX(0);
+            }
+            to {
+                opacity: 0;
+                transform: translateX(-100px);
+            }
+        }
+        
+        .blob {
+            border-radius: 30% 70% 70% 30% / 30% 30% 70% 70%;
+            animation: blob 8s ease-in-out infinite;
+        }
+        
+        @keyframes blob {
+            0% { border-radius: 30% 70% 70% 30% / 30% 30% 70% 70%; }
+            25% { border-radius: 58% 42% 75% 25% / 76% 46% 54% 24%; }
+            50% { border-radius: 50% 50% 33% 67% / 55% 27% 73% 45%; }
+            75% { border-radius: 33% 67% 58% 42% / 63% 68% 32% 37%; }
+            100% { border-radius: 30% 70% 70% 30% / 30% 30% 70% 70%; }
+        }
+    </style>
+</head>
+<body class="min-h-screen flex items-center justify-center py-12 px-4">
+    
+    <!-- Background decorative elements -->
+    <div class="fixed inset-0 overflow-hidden pointer-events-none">
+        <div class="absolute -top-40 -right-40 w-80 h-80 bg-white opacity-10 rounded-full blob animate-float"></div>
+        <div class="absolute -bottom-40 -left-40 w-96 h-96 bg-white opacity-5 rounded-full blob" style="animation: float 8s ease-in-out infinite reverse, blob 10s ease-in-out infinite;"></div>
+        <div class="absolute top-1/2 left-1/4 w-32 h-32 bg-white opacity-5 rounded-full animate-float" style="animation-delay: 2s;"></div>
+        <div class="absolute bottom-1/4 right-1/4 w-24 h-24 bg-white opacity-10 rounded-full animate-float" style="animation-delay: 4s;"></div>
+    </div>
+
+    <div class="w-full max-w-6xl mx-auto" x-data="{ 
+        isLogin: true, 
+        loading: false,
+        showPassword: false,
+        showConfirmPassword: false,
+        formData: {
+            email: '',
+            password: '',
+            name: '',
+            confirmPassword: '',
+            grade: '',
+            interests: []
+        },
+        
+        toggleForm() {
+            this.isLogin = !this.isLogin;
+            this.resetForm();
+        },
+        
+        resetForm() {
+            this.formData = {
+                email: '',
+                password: '',
+                name: '',
+                confirmPassword: '',
+                grade: '',
+                interests: []
+            };
+            this.showPassword = false;
+            this.showConfirmPassword = false;
+        },
+        
+        async handleSubmit() {
+            this.loading = true;
+            // Simulate API call
+            await new Promise(resolve => setTimeout(resolve, 1500));
+            this.loading = false;
+            
+            if (this.isLogin) {
+                alert('Login successful! Redirecting to dashboard...');
+            } else {
+                alert('Registration successful! Please check your email to verify your account.');
+            }
+        }
+    }">
+        
+        <div class="grid grid-cols-1 lg:grid-cols-2 gap-8 items-center">
+            
+            <!-- Left side - Branding & Info -->
+            <div class="text-center lg:text-left text-white space-y-8 order-2 lg:order-1">
+                <div class="space-y-6">
+                    <a href="#" class="font-display font-bold text-4xl tracking-tighter inline-block">
+                        Edu<span class="text-yellow-300">Path</span>
+                    </a>
+                    <h1 class="text-3xl lg:text-5xl font-display font-bold leading-tight">
+                        Your future starts with the <span class="text-yellow-300">right choice</span>
+                    </h1>
+                    <p class="text-lg text-blue-100 max-w-lg">
+                        Join thousands of students who have discovered their perfect career path. Get personalized guidance for your educational journey.
+                    </p>
+                </div>
+                
+                <div class="grid grid-cols-2 gap-6 max-w-md mx-auto lg:mx-0">
+                    <div class="text-center">
+                        <div class="text-2xl font-bold">10,000+</div>
+                        <div class="text-sm text-blue-200">Government Colleges</div>
+                    </div>
+                    <div class="text-center">
+                        <div class="text-2xl font-bold">500+</div>
+                        <div class="text-sm text-blue-200">Career Paths</div>
+                    </div>
+                    <div class="text-center">
+                        <div class="text-2xl font-bold">1M+</div>
+                        <div class="text-sm text-blue-200">Students Guided</div>
+                    </div>
+                    <div class="text-center">
+                        <div class="text-2xl font-bold">All</div>
+                        <div class="text-sm text-blue-200">Indian States</div>
+                    </div>
+                </div>
+                
+                <!-- Testimonial -->
+                <div class="glass-card rounded-2xl p-6 max-w-md mx-auto lg:mx-0">
+                    <div class="flex items-center space-x-3 mb-3">
+                        <img src="https://images.unsplash.com/photo-1494790108755-2616b612b550?ixlib=rb-4.0.3&auto=format&fit=crop&w=150&q=80" alt="Student" class="w-10 h-10 rounded-full">
+                        <div>
+                            <div class="font-semibold text-sm">Priya Sharma</div>
+                            <div class="text-xs text-blue-200">Engineering Student</div>
+                        </div>
+                    </div>
+                    <p class="text-sm text-blue-100">"EduPath helped me choose the perfect engineering college. The assessment was spot-on!"</p>
+                </div>
+            </div>
+            
+            <!-- Right side - Auth Forms -->
+            <div class="order-1 lg:order-2">
+                <div class="morph-bg rounded-3xl p-8 lg:p-10 max-w-md mx-auto w-full">
+                    
+                    <!-- Form Toggle Tabs -->
+                    <div class="flex bg-gray-100 rounded-2xl p-1 mb-8">
+                        <button 
+                            @click="toggleForm()"
+                            :class="{ 'bg-white shadow-md': isLogin, 'text-gray-500': !isLogin }"
+                            class="flex-1 py-3 px-4 rounded-xl font-semibold transition-all duration-300"
+                        >
+                            Login
+                        </button>
+                        <button 
+                            @click="toggleForm()"
+                            :class="{ 'bg-white shadow-md': !isLogin, 'text-gray-500': isLogin }"
+                            class="flex-1 py-3 px-4 rounded-xl font-semibold transition-all duration-300"
+                        >
+                            Register
+                        </button>
+                    </div>
+                    
+                    <!-- Login Form -->
+                    <form x-show="isLogin" x-cloak @submit.prevent="handleSubmit()" class="space-y-6" x-transition:enter="transition ease-out duration-300" x-transition:enter-start="opacity-0 transform translate-x-4" x-transition:enter-end="opacity-100 transform translate-x-0">
+                        
+                        <div class="text-center mb-6">
+                            <h2 class="text-2xl font-display font-bold mb-2">Welcome Back!</h2>
+                            <p class="text-gray-600">Sign in to continue your educational journey</p>
+                        </div>
+                        
+                        <div class="input-group">
+                            <label class="block text-sm font-semibold text-gray-700 mb-2">Email Address</label>
+                            <div class="relative">
+                                <input 
+                                    type="email" 
+                                    x-model="formData.email"
+                                    required
+                                    class="w-full px-4 py-3 rounded-xl border border-gray-200 focus:outline-none focus:ring-2 focus:ring-indigo-500 focus:border-transparent pl-11"
+                                    placeholder="your.email@example.com"
+                                >
+                                <i class="fas fa-envelope absolute left-4 top-1/2 transform -translate-y-1/2 text-gray-400"></i>
+                            </div>
+                        </div>
+                        
+                        <div class="input-group">
+                            <label class="block text-sm font-semibold text-gray-700 mb-2">Password</label>
+                            <div class="relative">
+                                <input 
+                                    :type="showPassword ? 'text' : 'password'" 
+                                    x-model="formData.password"
+                                    required
+                                    class="w-full px-4 py-3 rounded-xl border border-gray-200 focus:outline-none focus:ring-2 focus:ring-indigo-500 focus:border-transparent pl-11 pr-11"
+                                    placeholder="Enter your password"
+                                >
+                                <i class="fas fa-lock absolute left-4 top-1/2 transform -translate-y-1/2 text-gray-400"></i>
+                                <button 
+                                    type="button"
+                                    @click="showPassword = !showPassword"
+                                    class="absolute right-4 top-1/2 transform -translate-y-1/2 text-gray-400 hover:text-gray-600"
+                                >
+                                    <i :class="showPassword ? 'fas fa-eye-slash' : 'fas fa-eye'"></i>
+                                </button>
+                            </div>
+                        </div>
+                        
+                        <div class="flex items-center justify-between">
+                            <label class="flex items-center">
+                                <input type="checkbox" class="rounded border-gray-300 text-indigo-600 shadow-sm focus:border-indigo-300 focus:ring focus:ring-indigo-200 focus:ring-opacity-50">
+                                <span class="ml-2 text-sm text-gray-600">Remember me</span>
+                            </label>
+                            <a href="#" class="text-sm text-indigo-600 hover:text-indigo-700 font-medium">Forgot password?</a>
+                        </div>
+                        
+                        <button 
+                            type="submit" 
+                            :disabled="loading"
+                            class="w-full btn-primary text-white font-semibold py-4 rounded-xl disabled:opacity-50 disabled:cursor-not-allowed flex items-center justify-center"
+                        >
+                            <span x-show="!loading">Sign In</span>
+                            <div x-show="loading" class="flex items-center">
+                                <svg class="animate-spin -ml-1 mr-3 h-5 w-5 text-white" xmlns="http://www.w3.org/2000/svg" fill="none" viewBox="0 0 24 24">
+                                    <circle class="opacity-25" cx="12" cy="12" r="10" stroke="currentColor" stroke-width="4"></circle>
+                                    <path class="opacity-75" fill="currentColor" d="M4 12a8 8 0 018-8V0C5.373 0 0 5.373 0 12h4zm2 5.291A7.962 7.962 0 014 12H0c0 3.042 1.135 5.824 3 7.938l3-2.647z"></path>
+                                </svg>
+                                Signing in...
+                            </div>
+                        </button>
+                    </form>
+                    
+                    <!-- Registration Form -->
+                    <form x-show="!isLogin" x-cloak @submit.prevent="handleSubmit()" class="space-y-6" x-transition:enter="transition ease-out duration-300" x-transition:enter-start="opacity-0 transform translate-x-4" x-transition:enter-end="opacity-100 transform translate-x-0">
+                        
+                        <div class="text-center mb-6">
+                            <h2 class="text-2xl font-display font-bold mb-2">Create Account</h2>
+                            <p class="text-gray-600">Start your educational journey today</p>
+                        </div>
+                        
+                        <div class="grid grid-cols-1 gap-6">
+                            <div class="input-group">
+                                <label class="block text-sm font-semibold text-gray-700 mb-2">Full Name</label>
+                                <div class="relative">
+                                    <input 
+                                        type="text" 
+                                        x-model="formData.name"
+                                        required
+                                        class="w-full px-4 py-3 rounded-xl border border-gray-200 focus:outline-none focus:ring-2 focus:ring-indigo-500 focus:border-transparent pl-11"
+                                        placeholder="Enter your full name"
+                                    >
+                                    <i class="fas fa-user absolute left-4 top-1/2 transform -translate-y-1/2 text-gray-400"></i>
+                                </div>
+                            </div>
+                            
+                            <div class="input-group">
+                                <label class="block text-sm font-semibold text-gray-700 mb-2">Email Address</label>
+                                <div class="relative">
+                                    <input 
+                                        type="email" 
+                                        x-model="formData.email"
+                                        required
+                                        class="w-full px-4 py-3 rounded-xl border border-gray-200 focus:outline-none focus:ring-2 focus:ring-indigo-500 focus:border-transparent pl-11"
+                                        placeholder="your.email@example.com"
+                                    >
+                                    <i class="fas fa-envelope absolute left-4 top-1/2 transform -translate-y-1/2 text-gray-400"></i>
+                                </div>
+                            </div>
+                            
+                            <div class="input-group">
+                                <label class="block text-sm font-semibold text-gray-700 mb-2">Current Grade</label>
+                                <div class="relative">
+                                    <select 
+                                        x-model="formData.grade"
+                                        required
+                                        class="w-full px-4 py-3 rounded-xl border border-gray-200 focus:outline-none focus:ring-2 focus:ring-indigo-500 focus:border-transparent pl-11 appearance-none bg-white"
+                                    >
+                                        <option value="">Select your current grade</option>
+                                        <option value="9">Class 9</option>
+                                        <option value="10">Class 10</option>
+                                        <option value="11">Class 11</option>
+                                        <option value="12">Class 12</option>
+                                        <option value="graduate">Graduate</option>
+                                        <option value="other">Other</option>
+                                    </select>
+                                    <i class="fas fa-graduation-cap absolute left-4 top-1/2 transform -translate-y-1/2 text-gray-400"></i>
+                                    <i class="fas fa-chevron-down absolute right-4 top-1/2 transform -translate-y-1/2 text-gray-400"></i>
+                                </div>
+                            </div>
+                            
+                            <div class="input-group">
+                                <label class="block text-sm font-semibold text-gray-700 mb-2">Password</label>
+                                <div class="relative">
+                                    <input 
+                                        :type="showPassword ? 'text' : 'password'" 
+                                        x-model="formData.password"
+                                        required
+                                        class="w-full px-4 py-3 rounded-xl border border-gray-200 focus:outline-none focus:ring-2 focus:ring-indigo-500 focus:border-transparent pl-11 pr-11"
+                                        placeholder="Create a password"
+                                    >
+                                    <i class="fas fa-lock absolute left-4 top-1/2 transform -translate-y-1/2 text-gray-400"></i>
+                                    <button 
+                                        type="button"
+                                        @click="showPassword = !showPassword"
+                                        class="absolute right-4 top-1/2 transform -translate-y-1/2 text-gray-400 hover:text-gray-600"
+                                    >
+                                        <i :class="showPassword ? 'fas fa-eye-slash' : 'fas fa-eye'"></i>
+                                    </button>
+                                </div>
+                            </div>
+                            
+                            <div class="input-group">
+                                <label class="block text-sm font-semibold text-gray-700 mb-2">Confirm Password</label>
+                                <div class="relative">
+                                    <input 
+                                        :type="showConfirmPassword ? 'text' : 'password'" 
+                                        x-model="formData.confirmPassword"
+                                        required
+                                        class="w-full px-4 py-3 rounded-xl border border-gray-200 focus:outline-none focus:ring-2 focus:ring-indigo-500 focus:border-transparent pl-11 pr-11"
+                                        placeholder="Confirm your password"
+                                    >
+                                    <i class="fas fa-lock absolute left-4 top-1/2 transform -translate-y-1/2 text-gray-400"></i>
+                                    <button 
+                                        type="button"
+                                        @click="showConfirmPassword = !showConfirmPassword"
+                                        class="absolute right-4 top-1/2 transform -translate-y-1/2 text-gray-400 hover:text-gray-600"
+                                    >
+                                        <i :class="showConfirmPassword ? 'fas fa-eye-slash' : 'fas fa-eye'"></i>
+                                    </button>
+                                </div>
+                            </div>
+                        </div>
+                        
+                        <div class="flex items-start">
+                            <input type="checkbox" required class="rounded border-gray-300 text-indigo-600 shadow-sm focus:border-indigo-300 focus:ring focus:ring-indigo-200 focus:ring-opacity-50 mt-1">
+                            <span class="ml-3 text-sm text-gray-600">
+                                I agree to the <a href="#" class="text-indigo-600 hover:text-indigo-700 font-medium">Terms of Service</a> and <a href="#" class="text-indigo-600 hover:text-indigo-700 font-medium">Privacy Policy</a>
+                            </span>
+                        </div>
+                        
+                        <button 
+                            type="submit" 
+                            :disabled="loading"
+                            class="w-full btn-primary text-white font-semibold py-4 rounded-xl disabled:opacity-50 disabled:cursor-not-allowed flex items-center justify-center"
+                        >
+                            <span x-show="!loading">Create Account</span>
+                            <div x-show="loading" class="flex items-center">
+                                <svg class="animate-spin -ml-1 mr-3 h-5 w-5 text-white" xmlns="http://www.w3.org/2000/svg" fill="none" viewBox="0 0 24 24">
+                                    <circle class="opacity-25" cx="12" cy="12" r="10" stroke="currentColor" stroke-width="4"></circle>
+                                    <path class="opacity-75" fill="currentColor" d="M4 12a8 8 0 018-8V0C5.373 0 0 5.373 0 12h4zm2 5.291A7.962 7.962 0 014 12H0c0 3.042 1.135 5.824 3 7.938l3-2.647z"></path>
+                                </svg>
+                                Creating account...
+                            </div>
+                        </button>
+                    </form>
+                    
+                    <!-- Social Login Divider -->
+                    <div class="relative my-8">
+                        <div class="absolute inset-0 flex items-center">
+                            <div class="w-full border-t border-gray-200"></div>
+                        </div>
+                        <div class="relative flex justify-center text-sm">
+                            <span class="px-4 bg-white text-gray-500">Or continue with</span>
+                        </div>
+                    </div>
+                    
+                    <!-- Social Login Buttons -->
+                    <div class="grid grid-cols-2 gap-4">
+                        <button class="social-btn flex items-center justify-center px-4 py-3 border border-gray-200 rounded-xl hover:bg-gray-50">
+                            <svg class="w-5 h-5 mr-2" viewBox="0 0 24 24">
+                                <path fill="#4285f4" d="M22.56 12.25c0-.78-.07-1.53-.2-2.25H12v4.26h5.92c-.26 1.37-1.04 2.53-2.21 3.31v2.77h3.57c2.08-1.92 3.28-4.74 3.28-8.09z"/>
+                                <path fill="#34a853" d="M12 23c2.97 0 5.46-.98 7.28-2.66l-3.57-2.77c-.98.66-2.23 1.06-3.71 1.06-2.86 0-5.29-1.93-6.16-4.53H2.18v2.84C3.99 20.53 7.7 23 12 23z"/>
+                                <path fill="#fbbc05" d="M5.84 14.09c-.22-.66-.35-1.36-.35-2.09s.13-1.43.35-2.09V7.07H2.18C1.43 8.55 1 10.22 1 12s.43 3.45 1.18 4.93l2.85-2.22.81-.62z"/>
+                                <path fill="#ea4335" d="M12 5.38c1.62 0 3.06.56 4.21 1.64l3.15-3.15C17.45 2.09 14.97 1 12 1 7.7 1 3.99 3.47 2.18 7.07l3.66 2.84c.87-2.6 3.3-4.53 6.16-4.53z"/>
+                            </svg>
+                            Google
+                        </button>
+                        <button class="social-btn flex items-center justify-center px-4 py-3 border border-gray-200 rounded-xl hover:bg-gray-50">
+                            <svg class="w-5 h-5 mr-2" fill="#1877f2" viewBox="0 0 24 24">
+                                <path d="M24 12.073c0-6.627-5.373-12-12-12s-12 5.373-12 12c0 5.99 4.388 10.954 10.125 11.854v-8.385H7.078v-3.47h3.047V9.43c0-3.007 1.792-4.669 4.533-4.669 1.312 0 2.686.235 2.686.235v2.953H15.83c-1.491 0-1.956.925-1.956 1.874v2.25h3.328l-.532 3.47h-2.796v8.385C19.612 23.027 24 18.062 24 12.073z"/>
+                            </svg>
+                            Facebook
+                        </button>
+                    </div>
+                    
+                    <!-- Footer Text -->
+                    <div class="text-center text-sm text-gray-500 mt-8">
+                        <span x-show="isLogin">New to EduPath? </span>
+                        <span x-show="!isLogin">Already have an account? </span>
+                        <button @click="toggleForm()" class="text-indigo-600 hover:text-indigo-700 font-medium">
+                            <span x-show="isLogin">Create an account</span>
+                            <span x-show="!isLogin">Sign in instead</span>
+                        </button>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </div>
+</body>
+</html>

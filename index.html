@@ -1,0 +1,574 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>EduPath - Your Digital Career Guide</title>
+    <script src="https://cdn.jsdelivr.net/npm/@tailwindcss/browser@4"></script>
+    <script defer src="https://cdn.jsdelivr.net/npm/@alpinejs/intersect@3.x.x/dist/cdn.min.js"></script>
+    <script defer src="https://cdn.jsdelivr.net/npm/alpinejs@3.x.x/dist/cdn.min.js"></script>
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.0.0/css/all.min.css">
+    
+    <link rel="manifest" href="/manifest.json">
+<link rel="apple-touch-icon" href="/icons/apple-touch-icon.png">
+<meta name="theme-color" content="#3b82f6">
+    <style>
+        @import url('https://fonts.googleapis.com/css2?family=Space+Grotesk:wght@300;400;500;600;700&display=swap');
+        @import url('https://fonts.googleapis.com/css2?family=Syne:wght@400;500;600;700;800&display=swap');
+        
+        body {
+            font-family: 'Space Grotesk', sans-serif;
+        }
+        
+        .font-display {
+            font-family: 'Syne', sans-serif;
+        }
+        
+        [x-cloak] { display: none !important; }
+        
+        .morph-bg {
+            border-radius: 30px;
+            background: #ffffff;
+            box-shadow: 20px 20px 60px #d9d9d9, -20px -20px 60px #ffffff;
+        }
+        
+        .text-gradient {
+            background: linear-gradient(90deg, #4F46E5, #EC4899);
+            -webkit-background-clip: text;
+            background-clip: text;
+            color: transparent;
+        }
+        
+        .bg-gradient {
+            background: linear-gradient(135deg, #4F46E5, #EC4899);
+        }
+        
+        .animate-float {
+            animation: float 6s ease-in-out infinite;
+        }
+        
+        @keyframes float {
+            0% { transform: translateY(0px); }
+            50% { transform: translateY(-20px); }
+            100% { transform: translateY(0px); }
+        }
+        
+        @keyframes fade-in-up {
+            0% { opacity: 0; transform: translateY(40px); }
+            100% { opacity: 1; transform: translateY(0); }
+        }
+        
+        .animate-fade-in-up {
+            animation: fade-in-up 0.8s ease-out forwards;
+        }
+        
+        .nav-item {
+            position: relative;
+        }
+        
+        .nav-item::after {
+            content: '';
+            position: absolute;
+            bottom: -4px;
+            left: 0;
+            width: 0;
+            height: 2px;
+            background: currentColor;
+            transition: width 0.3s ease;
+        }
+        
+        .nav-item:hover::after {
+            width: 100%;
+        }
+        
+        .card-hover {
+            transition: transform 0.5s cubic-bezier(0.175, 0.885, 0.32, 1.275);
+        }
+        
+        .card-hover:hover {
+            transform: translateY(-10px);
+        }
+        
+        .marquee {
+            position: relative;
+            overflow: hidden;
+            --gap: 1rem;
+        }
+        
+        .marquee-content {
+            display: flex;
+            animation: scroll 20s linear infinite;
+            padding-right: var(--gap);
+        }
+        
+        .marquee-item {
+            flex: 0 0 auto;
+            margin-right: var(--gap);
+        }
+        
+        @keyframes scroll {
+            from { transform: translateX(0); }
+            to { transform: translateX(calc(-100% - var(--gap))); }
+        }
+    </style>
+</head>
+<body class="bg-gray-50 text-gray-900" x-data="{ mobileMenu: false }">
+
+    <!-- Navigation -->
+    <header x-data="{ isScrolled: false }" @scroll.window="isScrolled = window.pageYOffset > 60" :class="{'bg-white/80 backdrop-blur-lg shadow-md': isScrolled, 'bg-transparent': !isScrolled}" class="fixed w-full z-50 transition-all duration-300">
+        <div class="max-w-7xl mx-auto px-6 py-4">
+            <div class="flex items-center justify-between">
+                <a href="#" class="font-display font-bold text-2xl tracking-tighter">
+                    Edu<span class="text-gradient">Path</span>
+                </a>
+                
+                <!-- Desktop Menu -->
+                <nav class="hidden md:flex items-center space-x-8">
+                    <a href="#features" class="nav-item font-medium hover:text-indigo-700 transition">Features</a>
+                    <a href="#how-it-works" class="nav-item font-medium hover:text-indigo-700 transition">How It Works</a>
+                    <a href="#colleges" class="nav-item font-medium hover:text-indigo-700 transition">Colleges</a>
+                    <a href="#careers" class="nav-item font-medium hover:text-indigo-700 transition">Careers</a>
+                    <a href="#contact" class="nav-item font-medium hover:text-indigo-700 transition">Contact</a>
+                    
+                    <div class="quickBtn">
+                        <a href="/authpage/login.html" class="px-6 py-2.5 rounded-full bg-black text-white font-medium transition-all shadow-md hover:shadow-lg hover:scale-105">
+                            Get Started
+                        </a>
+                    </div>
+                </nav>
+                
+                <!-- Mobile Menu Button -->
+                <button @click="mobileMenu = !mobileMenu" class="md:hidden focus:outline-none">
+                    <svg class="w-7 h-7" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+                        <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M4 6h16M4 12h16M4 18h16"></path>
+                    </svg>
+                </button>
+            </div>
+        </div>
+    </header>
+
+    <!-- Mobile Side Menu -->
+    <div 
+        x-show="mobileMenu" 
+        x-cloak 
+        x-transition:enter="transition ease-out duration-300"
+        x-transition:enter-start="opacity-0 -translate-x-full"
+        x-transition:enter-end="opacity-100 translate-x-0"
+        x-transition:leave="transition ease-in duration-300"
+        x-transition:leave-start="opacity-100 translate-x-0"
+        x-transition:leave-end="opacity-0 -translate-x-full"
+        class="fixed inset-0 z-50 flex">
+        
+        <div @click="mobileMenu = false" class="fixed inset-0 bg-black/30 backdrop-blur-sm"></div>
+        
+        <div class="relative flex-1 flex flex-col max-w-xs w-full bg-white shadow-xl">
+            <div class="px-6 pt-8 pb-4 flex items-center justify-between">
+                <span class="font-display font-bold text-xl">Menu</span>
+                <button @click="mobileMenu = false" class="text-gray-500 hover:text-gray-900">
+                    <svg class="w-6 h-6" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+                        <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M6 18L18 6M6 6l12 12"></path>
+                    </svg>
+                </button>
+            </div>
+            
+            <div class="flex-1 px-6 py-6 overflow-y-auto">
+                <nav class="space-y-8">
+                    <a href="#features" class="block text-lg font-medium hover:text-indigo-600">Features</a>
+                    <a href="#how-it-works" class="block text-lg font-medium hover:text-indigo-600">How It Works</a>
+                    <a href="#colleges" class="block text-lg font-medium hover:text-indigo-600">Colleges</a>
+                    <a href="#careers" class="block text-lg font-medium hover:text-indigo-600">Careers</a>
+                    <a href="#contact" class="block text-lg font-medium hover:text-indigo-600">Contact</a>
+                </nav>
+            </div>
+            
+            <div class="px-6 py-6">
+                <a href="/authpage/login.html" class="block w-full text-center py-3 rounded-full bg-black text-white font-medium">
+                    Get Started
+                </a>
+            </div>
+        </div>
+    </div>
+
+    <!-- Hero Section -->
+    <section class="relative pt-32 pb-20 overflow-hidden">
+        <!-- Decorative Shapes -->
+        <div class="absolute -right-64 -top-64 w-96 h-96 bg-indigo-200 rounded-full mix-blend-multiply filter blur-3xl opacity-30 animate-float"></div>
+        <div class="absolute -left-20 top-1/2 w-72 h-72 bg-pink-200 rounded-full mix-blend-multiply filter blur-3xl opacity-30" style="animation: float 7s ease-in-out infinite"></div>
+        
+        <div class="max-w-7xl mx-auto px-6">
+            <div class="grid grid-cols-1 lg:grid-cols-2 gap-12 items-center">
+                <div class="space-y-8" x-data="{ shown: false }" x-init="setTimeout(() => shown = true, 300)">
+                    <h1 
+                        class="font-display text-5xl lg:text-7xl font-bold leading-tight"
+                        x-show="shown"
+                        x-transition:enter="transition ease-out duration-500"
+                        x-transition:enter-start="opacity-0 -translate-y-8"
+                        x-transition:enter-end="opacity-100 translate-y-0"
+                    >
+                        Your future starts with the <span class="text-gradient">right choice</span>
+                    </h1>
+                    
+                    <p 
+                        class="text-lg text-gray-600 max-w-xl"
+                        x-show="shown"
+                        x-transition:enter="transition ease-out duration-500 delay-300"
+                        x-transition:enter-start="opacity-0 -translate-y-8"
+                        x-transition:enter-end="opacity-100 translate-y-0"
+                    >
+                        Navigate your educational journey with personalized guidance, discover your perfect career path, and unlock opportunities in government colleges across India.
+                    </p>
+                    
+                    <div 
+                        class="flex flex-wrap gap-4"
+                        x-show="shown"
+                        x-transition:enter="transition ease-out duration-500 delay-500"
+                        x-transition:enter-start="opacity-0 -translate-y-8"
+                        x-transition:enter-end="opacity-100 translate-y-0"
+                    >
+                        <a href="#" class="px-8 py-4 bg-black text-white font-medium rounded-full shadow-md hover:shadow-xl transition-all duration-300 hover:scale-105">
+                            Take Free Assessment
+                        </a>
+                        <a href="#" class="px-8 py-4 bg-white text-black font-medium rounded-full border border-black shadow-md hover:shadow-xl transition-all duration-300 hover:scale-105">
+                            Explore Colleges
+                        </a>
+                    </div>
+                </div>
+                
+                <div class="relative" x-data="{ shown: false }" x-intersect="shown = true">
+                    <div class="relative z-10 rounded-3xl overflow-hidden">
+                        <img src="https://images.unsplash.com/photo-1523240795612-9a054b0db644?ixlib=rb-4.0.3&auto=format&fit=crop&w=800&q=80" alt="Students studying" class="w-full h-auto rounded-3xl object-cover shadow-xl">
+                    </div>
+                    
+                    <!-- Decorative elements -->
+                    <div class="absolute -bottom-10 -right-10 w-64 h-64 bg-gradient opacity-20 rounded-full filter blur-3xl"></div>
+                    <div class="absolute -left-6 -bottom-6 w-32 h-32 bg-yellow-400 rounded-2xl rotate-12 -z-10"></div>
+                </div>
+            </div>
+        </div>
+    </section>
+
+    <!-- Animated Marquee -->
+    <div class="py-8 bg-black text-white overflow-hidden">
+        <div class="marquee">
+            <div class="marquee-content">
+                <div class="marquee-item text-xl font-semibold tracking-wide py-2 px-4">⭐ 10,000+ GOVERNMENT COLLEGES</div>
+                <div class="marquee-item text-xl font-semibold tracking-wide py-2 px-4">🎯 500+ CAREER PATHS</div>
+                <div class="marquee-item text-xl font-semibold tracking-wide py-2 px-4">👩‍🎓 1M+ STUDENTS GUIDED</div>
+                <div class="marquee-item text-xl font-semibold tracking-wide py-2 px-4">🏛️ ALL INDIAN STATES</div>
+                <div class="marquee-item text-xl font-semibold tracking-wide py-2 px-4">⭐ 10,000+ GOVERNMENT COLLEGES</div>
+                <div class="marquee-item text-xl font-semibold tracking-wide py-2 px-4">🎯 500+ CAREER PATHS</div>
+                <div class="marquee-item text-xl font-semibold tracking-wide py-2 px-4">👩‍🎓 1M+ STUDENTS GUIDED</div>
+                <div class="marquee-item text-xl font-semibold tracking-wide py-2 px-4">🏛️ ALL INDIAN STATES</div>
+            </div>
+        </div>
+    </div>
+
+    <!-- Problem Section -->
+    <section class="py-24 bg-white">
+        <div class="max-w-6xl mx-auto px-6">
+            <div class="text-center mb-16">
+                <h2 class="text-4xl font-display font-bold mb-6">The Challenge Students Face</h2>
+                <p class="text-lg text-gray-600 max-w-3xl mx-auto">
+                    After Class 10 or 12, students are overwhelmed with choices but lack proper guidance
+                </p>
+            </div>
+            
+            <div class="grid md:grid-cols-2 lg:grid-cols-4 gap-8">
+                <div class="text-center p-8 rounded-3xl morph-bg card-hover">
+                    <div class="w-16 h-16 bg-red-100 rounded-2xl flex items-center justify-center mx-auto mb-6">
+                        <i class="fas fa-question-circle text-2xl text-red-600"></i>
+                    </div>
+                    <h3 class="text-xl font-bold mb-4">Stream Confusion</h3>
+                    <p class="text-gray-600">Which subject stream to choose after 10th or 12th?</p>
+                </div>
+                
+                <div class="text-center p-8 rounded-3xl morph-bg card-hover">
+                    <div class="w-16 h-16 bg-orange-100 rounded-2xl flex items-center justify-center mx-auto mb-6">
+                        <i class="fas fa-university text-2xl text-orange-600"></i>
+                    </div>
+                    <h3 class="text-xl font-bold mb-4">College Awareness</h3>
+                    <p class="text-gray-600">Lack of information about nearby government colleges</p>
+                </div>
+                
+                <div class="text-center p-8 rounded-3xl morph-bg card-hover">
+                    <div class="w-16 h-16 bg-yellow-100 rounded-2xl flex items-center justify-center mx-auto mb-6">
+                        <i class="fas fa-briefcase text-2xl text-yellow-600"></i>
+                    </div>
+                    <h3 class="text-xl font-bold mb-4">Career Clarity</h3>
+                    <p class="text-gray-600">Unknown job prospects after different degree programs</p>
+                </div>
+                
+                <div class="text-center p-8 rounded-3xl morph-bg card-hover">
+                    <div class="w-16 h-16 bg-green-100 rounded-2xl flex items-center justify-center mx-auto mb-6">
+                        <i class="fas fa-target text-2xl text-green-600"></i>
+                    </div>
+                    <h3 class="text-xl font-bold mb-4">Worth Assessment</h3>
+                    <p class="text-gray-600">Is graduation worth it vs skill-based courses?</p>
+                </div>
+            </div>
+        </div>
+    </section>
+
+    <!-- Features Section -->
+    <section id="features" class="py-24 bg-gray-50">
+        <div class="max-w-7xl mx-auto px-6">
+            <div class="text-center mb-16">
+                <h2 class="text-4xl font-display font-bold mb-6">Why Students Choose EduPath</h2>
+                <p class="text-lg text-gray-600 max-w-2xl mx-auto">Our platform provides everything you need to make informed educational and career decisions.</p>
+            </div>
+            
+            <div class="grid grid-cols-1 md:grid-cols-3 gap-10">
+                <div class="card-hover p-8 rounded-3xl morph-bg" x-data="{hover: false}" @mouseenter="hover = true" @mouseleave="hover = false">
+                    <div class="h-14 w-14 bg-indigo-100 rounded-2xl flex items-center justify-center mb-6">
+                        <i class="fas fa-brain text-2xl text-indigo-600"></i>
+                    </div>
+                    <h3 class="text-2xl font-bold mb-4">Smart Assessment</h3>
+                    <p class="text-gray-600 mb-6">Take our scientifically designed aptitude and interest assessment to discover your ideal career path.</p>
+                    <div class="transition-all duration-300" :class="{'opacity-100': hover, 'opacity-0': !hover}">
+                        <a href="#" class="text-indigo-600 font-medium inline-flex items-center">
+                            Learn more
+                            <svg class="w-4 h-4 ml-2" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+                                <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M14 5l7 7m0 0l-7 7m7-7H3"></path>
+                            </svg>
+                        </a>
+                    </div>
+                </div>
+                
+                <div class="card-hover p-8 rounded-3xl morph-bg" x-data="{hover: false}" @mouseenter="hover = true" @mouseleave="hover = false">
+                    <div class="h-14 w-14 bg-pink-100 rounded-2xl flex items-center justify-center mb-6">
+                        <i class="fas fa-map-marked-alt text-2xl text-pink-600"></i>
+                    </div>
+                    <h3 class="text-2xl font-bold mb-4">Career Path Mapping</h3>
+                    <p class="text-gray-600 mb-6">Visual roadmaps showing exactly where each degree program can take your career.</p>
+                    <div class="transition-all duration-300" :class="{'opacity-100': hover, 'opacity-0': !hover}">
+                        <a href="#" class="text-pink-600 font-medium inline-flex items-center">
+                            Learn more
+                            <svg class="w-4 h-4 ml-2" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+                                <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M14 5l7 7m0 0l-7 7m7-7H3"></path>
+                            </svg>
+                        </a>
+                    </div>
+                </div>
+                
+                <div class="card-hover p-8 rounded-3xl morph-bg" x-data="{hover: false}" @mouseenter="hover = true" @mouseleave="hover = false">
+                    <div class="h-14 w-14 bg-amber-100 rounded-2xl flex items-center justify-center mb-6">
+                        <i class="fas fa-map-marker-alt text-2xl text-amber-600"></i>
+                    </div>
+                    <h3 class="text-2xl font-bold mb-4">College Directory</h3>
+                    <p class="text-gray-600 mb-6">Comprehensive database of government colleges with detailed information and comparisons.</p>
+                    <div class="transition-all duration-300" :class="{'opacity-100': hover, 'opacity-0': !hover}">
+                        <a href="#" class="text-amber-600 font-medium inline-flex items-center">
+                            Learn more
+                            <svg class="w-4 h-4 ml-2" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+                                <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M14 5l7 7m0 0l-7 7m7-7H3"></path>
+                            </svg>
+                        </a>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </section>
+
+    <!-- How It Works Section -->
+    <section id="how-it-works" class="py-24 bg-white">
+        <div class="max-w-7xl mx-auto px-6">
+            <h2 class="text-4xl font-display font-bold mb-16 text-center">How EduPath Works</h2>
+            
+            <div class="relative">
+                <!-- Connection line -->
+                <div class="hidden md:block absolute top-20 left-[10%] w-[80%] h-0.5 bg-gray-200"></div>
+                
+                <div class="grid grid-cols-1 md:grid-cols-4 gap-16">
+                    <div class="relative text-center" x-data="{ isVisible: false }" x-intersect:enter="isVisible = true" x-intersect:leave="isVisible = false">
+                        <div 
+                            class="w-16 h-16 rounded-full bg-white border-2 border-indigo-600 flex items-center justify-center mx-auto mb-8 z-10 relative transition-all duration-500"
+                            :class="{ 'bg-indigo-600 text-white': isVisible }"
+                        >
+                            <span class="text-xl font-bold">1</span>
+                        </div>
+                        <h3 class="text-xl font-bold mb-4">Create Profile</h3>
+                        <p class="text-gray-600">Sign up and tell us about your academic background and interests</p>
+                    </div>
+                    
+                    <div class="relative text-center" x-data="{ isVisible: false }" x-intersect:enter="isVisible = true" x-intersect:leave="isVisible = false">
+                        <div 
+                            class="w-16 h-16 rounded-full bg-white border-2 border-indigo-600 flex items-center justify-center mx-auto mb-8 z-10 relative transition-all duration-700 delay-300"
+                            :class="{ 'bg-indigo-600 text-white': isVisible }"
+                        >
+                            <span class="text-xl font-bold">2</span>
+                        </div>
+                        <h3 class="text-xl font-bold mb-4">Take Assessment</h3>
+                        <p class="text-gray-600">Complete our comprehensive aptitude and interest evaluation</p>
+                    </div>
+                    
+                    <div class="relative text-center" x-data="{ isVisible: false }" x-intersect:enter="isVisible = true" x-intersect:leave="isVisible = false">
+                        <div 
+                            class="w-16 h-16 rounded-full bg-white border-2 border-indigo-600 flex items-center justify-center mx-auto mb-8 z-10 relative transition-all duration-700 delay-500"
+                            :class="{ 'bg-indigo-600 text-white': isVisible }"
+                        >
+                            <span class="text-xl font-bold">3</span>
+                        </div>
+                        <h3 class="text-xl font-bold mb-4">Get Recommendations</h3>
+                        <p class="text-gray-600">Receive personalized course and college suggestions</p>
+                    </div>
+                    
+                    <div class="relative text-center" x-data="{ isVisible: false }" x-intersect:enter="isVisible = true" x-intersect:leave="isVisible = false">
+                        <div 
+                            class="w-16 h-16 rounded-full bg-white border-2 border-indigo-600 flex items-center justify-center mx-auto mb-8 z-10 relative transition-all duration-700 delay-700"
+                            :class="{ 'bg-indigo-600 text-white': isVisible }"
+                        >
+                            <span class="text-xl font-bold">4</span>
+                        </div>
+                        <h3 class="text-xl font-bold mb-4">Take Action</h3>
+                        <p class="text-gray-600">Apply to colleges and pursue your chosen career path</p>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </section>
+
+    <!-- Top Streams Section -->
+    <section class="py-24 bg-gray-50">
+        <div class="max-w-7xl mx-auto px-6 text-center">
+            <h2 class="text-4xl font-display font-bold mb-12">Popular Career Streams</h2>
+            <div class="grid grid-cols-2 md:grid-cols-4 gap-8">
+                <div class="p-6 bg-white rounded-3xl shadow hover:shadow-lg card-hover">
+                    <i class="fas fa-laptop-code text-indigo-600 text-3xl mb-4"></i>
+                    <h3 class="text-lg font-semibold">Engineering</h3>
+                    <p class="text-gray-500 text-sm mt-2">1,200+ colleges</p>
+                </div>
+                <div class="p-6 bg-white rounded-3xl shadow hover:shadow-lg card-hover">
+                    <i class="fas fa-stethoscope text-pink-600 text-3xl mb-4"></i>
+                    <h3 class="text-lg font-semibold">Medical</h3>
+                    <p class="text-gray-500 text-sm mt-2">850+ colleges</p>
+                </div>
+                <div class="p-6 bg-white rounded-3xl shadow hover:shadow-lg card-hover">
+                    <i class="fas fa-chart-line text-yellow-600 text-3xl mb-4"></i>
+                    <h3 class="text-lg font-semibold">Commerce</h3>
+                    <p class="text-gray-500 text-sm mt-2">2,100+ colleges</p>
+                </div>
+                <div class="p-6 bg-white rounded-3xl shadow hover:shadow-lg card-hover">
+                    <i class="fas fa-palette text-green-600 text-3xl mb-4"></i>
+                    <h3 class="text-lg font-semibold">Arts</h3>
+                    <p class="text-gray-500 text-sm mt-2">1,800+ colleges</p>
+                </div>
+            </div>
+        </div>
+    </section>
+
+    <!-- CTA Section -->
+    <section class="py-24 relative overflow-hidden">
+        <div class="absolute inset-0 bg-gradient z-0 opacity-90"></div>
+        
+        <div class="max-w-5xl mx-auto px-6 relative z-10">
+            <div class="bg-white rounded-3xl p-12 shadow-xl">
+                <div class="grid grid-cols-1 md:grid-cols-2 gap-12 items-center">
+                    <div>
+                        <h2 class="text-3xl md:text-4xl font-display font-bold mb-6">Ready to shape your future?</h2>
+                        <p class="text-gray-600 mb-8">Join thousands of students who have found their perfect career path with EduPath.</p>
+                        <a href="#" class="inline-block px-8 py-4 bg-black text-white font-medium rounded-full shadow-lg hover:shadow-xl transition-all duration-300 hover:scale-105">
+                            Start Your Journey Today
+                        </a>
+                    </div>
+                    
+                    <div class="relative">
+                        <div class="absolute -left-8 -bottom-8 w-full h-full bg-gradient rounded-3xl -z-10"></div>
+                        <img src="https://images.unsplash.com/photo-1571019613454-1cb2f99b2d8b?ixlib=rb-4.0.3&auto=format&fit=crop&w=600&q=80" alt="Student with laptop" class="w-full h-auto rounded-3xl shadow-lg">
+                    </div>
+                </div>
+            </div>
+        </div>
+    </section>
+
+    <!-- FAQ Section -->
+    <section class="py-24 bg-gray-50">
+        <div class="max-w-4xl mx-auto px-6 text-center">
+            <h2 class="text-4xl font-display font-bold mb-12">Frequently Asked Questions</h2>
+            <div class="space-y-6 text-left">
+                <details class="p-6 bg-white rounded-3xl shadow">
+                    <summary class="cursor-pointer font-semibold text-lg">Is EduPath free to use?</summary>
+                    <p class="mt-4 text-gray-600">Yes! EduPath is completely free for all students. Our basic assessment, college directory, and career guidance are available at no cost.</p>
+                </details>
+                <details class="p-6 bg-white rounded-3xl shadow">
+                    <summary class="cursor-pointer font-semibold text-lg">How accurate is the career assessment?</summary>
+                    <p class="mt-4 text-gray-600">Our assessment is designed by educational psychologists and validated with thousands of student outcomes. It provides reliable guidance based on proven aptitude and interest matching methods.</p>
+                </details>
+                <details class="p-6 bg-white rounded-3xl shadow">
+                    <summary class="cursor-pointer font-semibled text-lg">Which states and colleges are covered?</summary>
+                    <p class="mt-4 text-gray-600">We cover government colleges across all Indian states and union territories, with detailed information on courses, eligibility, and admission processes.</p>
+                </details>
+                <details class="p-6 bg-white rounded-3xl shadow">
+                    <summary class="cursor-pointer font-semibold text-lg">Can parents access my results?</summary>
+                    <p class="mt-4 text-gray-600">Your assessment results are private by default. You can choose to share them with parents or counselors through our secure sharing features.</p>
+                </details>
+            </div>
+        </div>
+    </section>
+
+    <!-- Footer -->
+    <footer class="bg-gray-900 text-white py-16">
+        <div class="max-w-7xl mx-auto px-6 grid grid-cols-1 sm:grid-cols-2 md:grid-cols-4 gap-12">
+            <div>
+                <h3 class="font-display text-2xl font-bold mb-4">EduPath</h3>
+                <p class="text-gray-400">Your ultimate digital career guide. Navigate your educational journey with confidence and discover your perfect career path.</p>
+            </div>
+            <div>
+                <h4 class="text-lg font-semibold mb-3">Platform</h4>
+                <ul class="space-y-2 text-gray-400">
+                    <li><a href="#" class="hover:text-white transition">Assessment Tool</a></li>
+                    <li><a href="#" class="hover:text-white transition">College Directory</a></li>
+                    <li><a href="#" class="hover:text-white transition">Career Mapping</a></li>
+                    <li><a href="#" class="hover:text-white transition">Resources</a></li>
+                </ul>
+            </div>
+            <div>
+                <h4 class="text-lg font-semibold mb-3">Support</h4>
+                <ul class="space-y-2 text-gray-400">
+                    <li><a href="#" class="hover:text-white transition">Help Center</a></li>
+                    <li><a href="#" class="hover:text-white transition">Student Guide</a></li>
+                    <li><a href="#" class="hover:text-white transition">Parent Resources</a></li>
+                    <li><a href="#" class="hover:text-white transition">Contact Us</a></li>
+                </ul>
+            </div>
+            <div>
+                <h4 class="text-lg font-semibold mb-3">Newsletter</h4>
+                <p class="text-gray-400 mb-4">Stay updated with new features and educational insights.</p>
+                <form class="flex flex-col gap-3">
+                    <input type="email" placeholder="Your email" class="px-4 py-2 rounded-full bg-gray-800 border border-gray-700 text-white focus:outline-none focus:border-indigo-500 transition" />
+                    <button type="submit" class="px-6 py-2 bg-indigo-600 text-white font-medium rounded-full hover:bg-indigo-700 transition">Subscribe</button>
+                </form>
+            </div>
+        </div>
+        <div class="mt-12 text-center text-sm text-gray-500 border-t border-gray-700 pt-8">
+            &copy; 2025 EduPath. All rights reserved. | Privacy Policy | Terms of Service
+        </div>
+    </footer>
+
+    <script>
+        // Smooth scrolling for navigation links
+        document.querySelectorAll('a[href^="#"]').forEach(anchor => {
+            anchor.addEventListener('click', function (e) {
+                e.preventDefault();
+                const target = document.querySelector(this.getAttribute('href'));
+                if (target) {
+                    target.scrollIntoView({
+                        behavior: 'smooth',
+                        block: 'start'
+                    });
+                }
+            });
+        });
+
+        // Add some interactive effects
+        document.querySelectorAll('.card-hover').forEach(card => {
+            card.addEventListener('mouseenter', function() {
+                this.style.transform = 'translateY(-10px)';
+            });
+            
+            card.addEventListener('mouseleave', function() {
+                this.style.transform = 'translateY(0)';
+            });
+        });
+    </script>
+</body>
+</html>
