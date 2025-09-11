@@ -1,0 +1,1436 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Discover Your Dream Career - EduPath</title>
+    <script src="https://cdn.jsdelivr.net/npm/@tailwindcss/browser@4"></script>
+    <script defer src="https://cdn.jsdelivr.net/npm/@alpinejs/intersect@3.x.x/dist/cdn.min.js"></script>
+    <script defer src="https://cdn.jsdelivr.net/npm/alpinejs@3.x.x/dist/cdn.min.js"></script>
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.0.0/css/all.min.css">
+    
+    <style>
+        @import url('https://fonts.googleapis.com/css2?family=Space+Grotesk:wght@300;400;500;600;700&display=swap');
+        @import url('https://fonts.googleapis.com/css2?family=Syne:wght@400;500;600;700;800&display=swap');
+        
+        body {
+            font-family: 'Space Grotesk', sans-serif;
+        }
+        
+        .font-display {
+            font-family: 'Syne', sans-serif;
+        }
+        
+        [x-cloak] { display: none !important; }
+        
+        .morph-bg {
+            border-radius: 30px;
+            background: #ffffff;
+            box-shadow: 20px 20px 60px #d9d9d9, -20px -20px 60px #ffffff;
+        }
+        
+        .text-gradient {
+            background: linear-gradient(90deg, #4F46E5, #EC4899);
+            -webkit-background-clip: text;
+            background-clip: text;
+            color: transparent;
+        }
+        
+        .bg-gradient {
+            background: linear-gradient(135deg, #4F46E5, #EC4899);
+        }
+        
+        .animate-float {
+            animation: float 6s ease-in-out infinite;
+        }
+        
+        @keyframes float {
+            0% { transform: translateY(0px); }
+            50% { transform: translateY(-20px); }
+            100% { transform: translateY(0px); }
+        }
+        
+        .card-hover {
+            transition: transform 0.5s cubic-bezier(0.175, 0.885, 0.32, 1.275);
+        }
+        
+        .card-hover:hover {
+            transform: translateY(-10px);
+        }
+        
+        .nav-item {
+            position: relative;
+        }
+        
+        .nav-item::after {
+            content: '';
+            position: absolute;
+            bottom: -4px;
+            left: 0;
+            width: 0;
+            height: 2px;
+            background: currentColor;
+            transition: width 0.3s ease;
+        }
+        
+        .nav-item:hover::after {
+            width: 100%;
+        }
+        
+        .pathway-line {
+            position: relative;
+        }
+        
+        .pathway-line::before {
+            content: '';
+            position: absolute;
+            top: 50%;
+            left: 100%;
+            width: 50px;
+            height: 2px;
+            background: linear-gradient(90deg, #4F46E5, #EC4899);
+            transform: translateY(-50%);
+        }
+        
+        .salary-bar {
+            height: 8px;
+            border-radius: 4px;
+            background: linear-gradient(90deg, #10B981, #3B82F6);
+        }
+        
+        @media (max-width: 768px) {
+            .pathway-line::before {
+                display: none;
+            }
+        }
+    </style>
+</head>
+<body class="bg-gray-50 text-gray-900" x-data="{ mobileMenu: false, selectedCategory: 'technology' }">
+
+    <!-- Navigation -->
+    <header x-data="{ isScrolled: false }" @scroll.window="isScrolled = window.pageYOffset > 60" :class="{'bg-white/80 backdrop-blur-lg shadow-md': isScrolled, 'bg-transparent': !isScrolled}" class="fixed w-full z-50 transition-all duration-300">
+        <div class="max-w-7xl mx-auto px-6 py-4">
+            <div class="flex items-center justify-between">
+                <a href="../index.html" class="font-display font-bold text-2xl tracking-tighter">
+                    Edu<span class="text-gradient">Path</span>
+                </a>
+                
+                <!-- Desktop Menu -->
+                <nav class="hidden md:flex items-center space-x-8">
+                    <a href="../index.html#features" class="nav-item font-medium hover:text-indigo-700 transition">Features</a>
+                    <a href="../index.html#how-it-works" class="nav-item font-medium hover:text-indigo-700 transition">How It Works</a>
+                    <a href="./explore_colleges.html" class="nav-item font-medium hover:text-indigo-700 transition">Colleges</a>
+                    <a href="#" class="nav-item font-medium text-indigo-700">Careers</a>
+                    <a href="../index.html#contact" class="nav-item font-medium hover:text-indigo-700 transition">Contact</a>
+                    
+                    <div class="quickBtn">
+                        <a href="./auth.html" class="px-6 py-2.5 rounded-full bg-black text-white font-medium transition-all shadow-md hover:shadow-lg hover:scale-105">
+                            Get Started
+                        </a>
+                    </div>
+                </nav>
+                
+                <!-- Mobile Menu Button -->
+                <button @click="mobileMenu = !mobileMenu" class="md:hidden focus:outline-none">
+                    <svg class="w-7 h-7" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+                        <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M4 6h16M4 12h16M4 18h16"></path>
+                    </svg>
+                </button>
+            </div>
+        </div>
+    </header>
+
+    <!-- Mobile Side Menu -->
+    <div 
+        x-show="mobileMenu" 
+        x-cloak 
+        x-transition:enter="transition ease-out duration-300"
+        x-transition:enter-start="opacity-0 -translate-x-full"
+        x-transition:enter-end="opacity-100 translate-x-0"
+        x-transition:leave="transition ease-in duration-300"
+        x-transition:leave-start="opacity-100 translate-x-0"
+        x-transition:leave-end="opacity-0 -translate-x-full"
+        class="fixed inset-0 z-50 flex">
+        
+        <div @click="mobileMenu = false" class="fixed inset-0 bg-black/30 backdrop-blur-sm"></div>
+        
+        <div class="relative flex-1 flex flex-col max-w-xs w-full bg-white shadow-xl">
+            <div class="px-6 pt-8 pb-4 flex items-center justify-between">
+                <span class="font-display font-bold text-xl">Menu</span>
+                <button @click="mobileMenu = false" class="text-gray-500 hover:text-gray-900">
+                    <svg class="w-6 h-6" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+                        <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M6 18L18 6M6 6l12 12"></path>
+                    </svg>
+                </button>
+            </div>
+            
+            <div class="flex-1 px-6 py-6 overflow-y-auto">
+                <nav class="space-y-8">
+                    <a href="../index.html#features" class="block text-lg font-medium hover:text-indigo-600">Features</a>
+                    <a href="../index.html#how-it-works" class="block text-lg font-medium hover:text-indigo-600">How It Works</a>
+                    <a href="./explore_colleges.html" class="block text-lg font-medium hover:text-indigo-600">Colleges</a>
+                    <a href="#" class="block text-lg font-medium text-indigo-600">Careers</a>
+                    <a href="../index.html#contact" class="block text-lg font-medium hover:text-indigo-600">Contact</a>
+                </nav>
+            </div>
+            
+            <div class="px-6 py-6">
+                <a href="./auth.html" class="block w-full text-center py-3 rounded-full bg-black text-white font-medium">
+                    Get Started
+                </a>
+            </div>
+        </div>
+    </div>
+
+    <!-- Hero Section -->
+    <section class="relative pt-32 pb-20 overflow-hidden">
+        <!-- Decorative Shapes -->
+        <div class="absolute -right-64 -top-64 w-96 h-96 bg-indigo-200 rounded-full mix-blend-multiply filter blur-3xl opacity-30 animate-float"></div>
+        <div class="absolute -left-20 top-1/2 w-72 h-72 bg-pink-200 rounded-full mix-blend-multiply filter blur-3xl opacity-30" style="animation: float 7s ease-in-out infinite"></div>
+        
+        <div class="max-w-7xl mx-auto px-6">
+            <div class="grid grid-cols-1 lg:grid-cols-2 gap-12 items-center">
+                <div class="space-y-8" x-data="{ shown: false }" x-init="setTimeout(() => shown = true, 300)">
+                    <h1 
+                        class="font-display text-5xl lg:text-7xl font-bold leading-tight"
+                        x-show="shown"
+                        x-transition:enter="transition ease-out duration-500"
+                        x-transition:enter-start="opacity-0 -translate-y-8"
+                        x-transition:enter-end="opacity-100 translate-y-0"
+                    >
+                        Discover Your <span class="text-gradient">Dream Career</span> Path
+                    </h1>
+                    
+                    <p 
+                        class="text-lg text-gray-600 max-w-xl"
+                        x-show="shown"
+                        x-transition:enter="transition ease-out duration-500 delay-300"
+                        x-transition:enter-start="opacity-0 -translate-y-8"
+                        x-transition:enter-end="opacity-100 translate-y-0"
+                    >
+                        Explore 500+ career options, understand salary prospects, and map your educational journey to your dream job. Make informed decisions about your future.
+                    </p>
+                    
+                    <div 
+                        class="flex flex-wrap gap-4"
+                        x-show="shown"
+                        x-transition:enter="transition ease-out duration-500 delay-500"
+                        x-transition:enter-start="opacity-0 -translate-y-8"
+                        x-transition:enter-end="opacity-100 translate-y-0"
+                    >
+                        <a href="#career-assessment" class="px-8 py-4 bg-black text-white font-medium rounded-full shadow-md hover:shadow-xl transition-all duration-300 hover:scale-105">
+                            Take Career Assessment
+                        </a>
+                        <a href="#career-explorer" class="px-8 py-4 bg-white text-black font-medium rounded-full border border-black shadow-md hover:shadow-xl transition-all duration-300 hover:scale-105">
+                            Explore Careers
+                        </a>
+                    </div>
+                </div>
+                
+                <div class="relative" x-data="{ shown: false }" x-intersect="shown = true">
+                    <div class="relative z-10 rounded-3xl overflow-hidden">
+                        <img src="https://images.unsplash.com/photo-1507003211169-0a1dd7228f2d?ixlib=rb-4.0.3&auto=format&fit=crop&w=800&q=80" alt="Professional working" class="w-full h-auto rounded-3xl object-cover shadow-xl">
+                    </div>
+                    
+                    <!-- Floating career badges -->
+                    <div class="absolute -top-8 -left-8 bg-white p-4 rounded-2xl shadow-lg animate-float">
+                        <i class="fas fa-laptop-code text-indigo-600 text-2xl mb-2"></i>
+                        <p class="font-semibold text-sm">Tech Career</p>
+                    </div>
+                    
+                    <div class="absolute -bottom-6 -right-6 bg-white p-4 rounded-2xl shadow-lg" style="animation: float 8s ease-in-out infinite">
+                        <i class="fas fa-chart-line text-green-600 text-2xl mb-2"></i>
+                        <p class="font-semibold text-sm">High Growth</p>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </section>
+
+    <!-- Career Assessment Tool -->
+    <section id="career-assessment" class="py-24 bg-white">
+        <div class="max-w-6xl mx-auto px-6">
+            <div class="text-center mb-16">
+                <h2 class="text-4xl font-display font-bold mb-6">Career Discovery Assessment</h2>
+                <p class="text-lg text-gray-600 max-w-3xl mx-auto">
+                    Take our comprehensive assessment to discover careers that match your personality, skills, and interests
+                </p>
+            </div>
+            
+            <div class="grid md:grid-cols-2 lg:grid-cols-4 gap-8">
+                <div class="text-center p-8 rounded-3xl morph-bg card-hover">
+                    <div class="w-16 h-16 bg-indigo-100 rounded-2xl flex items-center justify-center mx-auto mb-6">
+                        <i class="fas fa-user-check text-2xl text-indigo-600"></i>
+                    </div>
+                    <h3 class="text-xl font-bold mb-4">Personality Assessment</h3>
+                    <p class="text-gray-600 mb-6">Discover your work style and preferences</p>
+                    <div class="text-sm text-indigo-600 font-medium">15 minutes</div>
+                </div>
+                
+                <div class="text-center p-8 rounded-3xl morph-bg card-hover">
+                    <div class="w-16 h-16 bg-green-100 rounded-2xl flex items-center justify-center mx-auto mb-6">
+                        <i class="fas fa-cogs text-2xl text-green-600"></i>
+                    </div>
+                    <h3 class="text-xl font-bold mb-4">Skills Assessment</h3>
+                    <p class="text-gray-600 mb-6">Evaluate your current abilities and strengths</p>
+                    <div class="text-sm text-green-600 font-medium">12 minutes</div>
+                </div>
+                
+                <div class="text-center p-8 rounded-3xl morph-bg card-hover">
+                    <div class="w-16 h-16 bg-yellow-100 rounded-2xl flex items-center justify-center mx-auto mb-6">
+                        <i class="fas fa-heart text-2xl text-yellow-600"></i>
+                    </div>
+                    <h3 class="text-xl font-bold mb-4">Interest Inventory</h3>
+                    <p class="text-gray-600 mb-6">Find what truly motivates and excites you</p>
+                    <div class="text-sm text-yellow-600 font-medium">10 minutes</div>
+                </div>
+                
+                <div class="text-center p-8 rounded-3xl morph-bg card-hover">
+                    <div class="w-16 h-16 bg-pink-100 rounded-2xl flex items-center justify-center mx-auto mb-6">
+                        <i class="fas fa-balance-scale text-2xl text-pink-600"></i>
+                    </div>
+                    <h3 class="text-xl font-bold mb-4">Work Values</h3>
+                    <p class="text-gray-600 mb-6">Understand what matters most to you at work</p>
+                    <div class="text-sm text-pink-600 font-medium">8 minutes</div>
+                </div>
+            </div>
+            
+            <div class="text-center mt-12">
+                <a href="./assessment.html" class="inline-block px-10 py-4 bg-gradient text-white font-semibold rounded-full shadow-lg hover:shadow-xl transition-all duration-300 hover:scale-105">
+                    Start Complete Assessment - FREE
+                </a>
+            </div>
+        </div>
+    </section>
+
+    <!-- Popular Career Categories -->
+    <section id="career-explorer" class="py-24 bg-gray-50">
+        <div class="max-w-7xl mx-auto px-6">
+            <div class="text-center mb-16">
+                <h2 class="text-4xl font-display font-bold mb-6">Popular Career Categories</h2>
+                <p class="text-lg text-gray-600 max-w-2xl mx-auto">Explore different career fields and discover opportunities that align with your interests</p>
+            </div>
+            
+            <!-- Category Tabs -->
+            <div class="flex flex-wrap justify-center gap-4 mb-12">
+                <button @click="selectedCategory = 'technology'" :class="{'bg-indigo-600 text-white': selectedCategory === 'technology', 'bg-white text-gray-700': selectedCategory !== 'technology'}" class="px-6 py-3 rounded-full font-medium transition-all duration-300 shadow-md">
+                    <i class="fas fa-laptop-code mr-2"></i>Technology
+                </button>
+                <button @click="selectedCategory = 'healthcare'" :class="{'bg-pink-600 text-white': selectedCategory === 'healthcare', 'bg-white text-gray-700': selectedCategory !== 'healthcare'}" class="px-6 py-3 rounded-full font-medium transition-all duration-300 shadow-md">
+                    <i class="fas fa-stethoscope mr-2"></i>Healthcare
+                </button>
+                <button @click="selectedCategory = 'engineering'" :class="{'bg-amber-600 text-white': selectedCategory === 'engineering', 'bg-white text-gray-700': selectedCategory !== 'engineering'}" class="px-6 py-3 rounded-full font-medium transition-all duration-300 shadow-md">
+                    <i class="fas fa-hard-hat mr-2"></i>Engineering
+                </button>
+                <button @click="selectedCategory = 'business'" :class="{'bg-green-600 text-white': selectedCategory === 'business', 'bg-white text-gray-700': selectedCategory !== 'business'}" class="px-6 py-3 rounded-full font-medium transition-all duration-300 shadow-md">
+                    <i class="fas fa-chart-line mr-2"></i>Business
+                </button>
+                <button @click="selectedCategory = 'creative'" :class="{'bg-purple-600 text-white': selectedCategory === 'creative', 'bg-white text-gray-700': selectedCategory !== 'creative'}" class="px-6 py-3 rounded-full font-medium transition-all duration-300 shadow-md">
+                    <i class="fas fa-palette mr-2"></i>Creative
+                </button>
+            </div>
+            
+            <!-- Technology Careers -->
+            <div x-show="selectedCategory === 'technology'" x-transition class="grid md:grid-cols-2 lg:grid-cols-3 gap-8">
+                <div class="bg-white p-8 rounded-3xl shadow-lg card-hover">
+                    <div class="flex items-center mb-6">
+                        <div class="w-12 h-12 bg-indigo-100 rounded-2xl flex items-center justify-center mr-4">
+                            <i class="fas fa-code text-indigo-600"></i>
+                        </div>
+                        <div>
+                            <h3 class="text-xl font-bold">Software Developer</h3>
+                            <p class="text-green-600 font-semibold">₹4-15 LPA</p>
+                        </div>
+                    </div>
+                    <p class="text-gray-600 mb-4">Build applications, websites, and software solutions that solve real-world problems.</p>
+                    <div class="flex items-center justify-between text-sm">
+                        <span class="bg-indigo-100 text-indigo-700 px-3 py-1 rounded-full">High Growth</span>
+                        <span class="text-gray-500">120K+ Jobs</span>
+                    </div>
+                </div>
+                
+                <div class="bg-white p-8 rounded-3xl shadow-lg card-hover">
+                    <div class="flex items-center mb-6">
+                        <div class="w-12 h-12 bg-blue-100 rounded-2xl flex items-center justify-center mr-4">
+                            <i class="fas fa-database text-blue-600"></i>
+                        </div>
+                        <div>
+                            <h3 class="text-xl font-bold">Data Scientist</h3>
+                            <p class="text-green-600 font-semibold">₹6-25 LPA</p>
+                        </div>
+                    </div>
+                    <p class="text-gray-600 mb-4">Analyze complex data to help organizations make better decisions and predictions.</p>
+                    <div class="flex items-center justify-between text-sm">
+                        <span class="bg-red-100 text-red-700 px-3 py-1 rounded-full">Hot Career</span>
+                        <span class="text-gray-500">45K+ Jobs</span>
+                    </div>
+                </div>
+                
+                <div class="bg-white p-8 rounded-3xl shadow-lg card-hover">
+                    <div class="flex items-center mb-6">
+                        <div class="w-12 h-12 bg-green-100 rounded-2xl flex items-center justify-center mr-4">
+                            <i class="fas fa-shield-alt text-green-600"></i>
+                        </div>
+                        <div>
+                            <h3 class="text-xl font-bold">Cybersecurity Analyst</h3>
+                            <p class="text-green-600 font-semibold">₹5-20 LPA</p>
+                        </div>
+                    </div>
+                    <p class="text-gray-600 mb-4">Protect organizations from digital threats and security breaches.</p>
+                    <div class="flex items-center justify-between text-sm">
+                        <span class="bg-yellow-100 text-yellow-700 px-3 py-1 rounded-full">Essential</span>
+                        <span class="text-gray-500">38K+ Jobs</span>
+                    </div>
+                </div>
+            </div>
+            
+            <!-- Healthcare Careers -->
+            <div x-show="selectedCategory === 'healthcare'" x-transition class="grid md:grid-cols-2 lg:grid-cols-3 gap-8">
+                <div class="bg-white p-8 rounded-3xl shadow-lg card-hover">
+                    <div class="flex items-center mb-6">
+                        <div class="w-12 h-12 bg-pink-100 rounded-2xl flex items-center justify-center mr-4">
+                            <i class="fas fa-user-md text-pink-600"></i>
+                        </div>
+                        <div>
+                            <h3 class="text-xl font-bold">Medical Doctor</h3>
+                            <p class="text-green-600 font-semibold">₹8-50 LPA</p>
+                        </div>
+                    </div>
+                    <p class="text-gray-600 mb-4">Diagnose and treat patients, specializing in various medical fields.</p>
+                    <div class="flex items-center justify-between text-sm">
+                        <span class="bg-pink-100 text-pink-700 px-3 py-1 rounded-full">Prestigious</span>
+                        <span class="text-gray-500">25K+ Jobs</span>
+                    </div>
+                </div>
+                
+                <div class="bg-white p-8 rounded-3xl shadow-lg card-hover">
+                    <div class="flex items-center mb-6">
+                        <div class="w-12 h-12 bg-blue-100 rounded-2xl flex items-center justify-center mr-4">
+                            <i class="fas fa-heartbeat text-blue-600"></i>
+                        </div>
+                        <div>
+                            <h3 class="text-xl font-bold">Nurse Practitioner</h3>
+                            <p class="text-green-600 font-semibold">₹3-12 LPA</p>
+                        </div>
+                    </div>
+                    <p class="text-gray-600 mb-4">Provide primary and specialty healthcare with advanced nursing training.</p>
+                    <div class="flex items-center justify-between text-sm">
+                        <span class="bg-green-100 text-green-700 px-3 py-1 rounded-full">In Demand</span>
+                        <span class="text-gray-500">65K+ Jobs</span>
+                    </div>
+                </div>
+                
+                <div class="bg-white p-8 rounded-3xl shadow-lg card-hover">
+                    <div class="flex items-center mb-6">
+                        <div class="w-12 h-12 bg-purple-100 rounded-2xl flex items-center justify-center mr-4">
+                            <i class="fas fa-brain text-purple-600"></i>
+                        </div>
+                        <div>
+                            <h3 class="text-xl font-bold">Mental Health Counselor</h3>
+                            <p class="text-green-600 font-semibold">₹3-15 LPA</p>
+                        </div>
+                    </div>
+                    <p class="text-gray-600 mb-4">Help individuals overcome mental health challenges and improve wellbeing.</p>
+                    <div class="flex items-center justify-between text-sm">
+                        <span class="bg-purple-100 text-purple-700 px-3 py-1 rounded-full">Growing</span>
+                        <span class="text-gray-500">22K+ Jobs</span>
+                    </div>
+                </div>
+            </div>
+            
+            <!-- Engineering Careers -->
+            <div x-show="selectedCategory === 'engineering'" x-transition class="grid md:grid-cols-2 lg:grid-cols-3 gap-8">
+                <div class="bg-white p-8 rounded-3xl shadow-lg card-hover">
+                    <div class="flex items-center mb-6">
+                        <div class="w-12 h-12 bg-amber-100 rounded-2xl flex items-center justify-center mr-4">
+                            <i class="fas fa-building text-amber-600"></i>
+                        </div>
+                        <div>
+                            <h3 class="text-xl font-bold">Civil Engineer</h3>
+                            <p class="text-green-600 font-semibold">₹3-12 LPA</p>
+                        </div>
+                    </div>
+                    <p class="text-gray-600 mb-4">Design and oversee construction of infrastructure projects and buildings.</p>
+                    <div class="flex items-center justify-between text-sm">
+                        <span class="bg-amber-100 text-amber-700 px-3 py-1 rounded-full">Stable</span>
+                        <span class="text-gray-500">85K+ Jobs</span>
+                    </div>
+                </div>
+                
+                <div class="bg-white p-8 rounded-3xl shadow-lg card-hover">
+                    <div class="flex items-center mb-6">
+                        <div class="w-12 h-12 bg-green-100 rounded-2xl flex items-center justify-center mr-4">
+                            <i class="fas fa-leaf text-green-600"></i>
+                        </div>
+                        <div>
+                            <h3 class="text-xl font-bold">Environmental Engineer</h3>
+                            <p class="text-green-600 font-semibold">₹4-15 LPA</p>
+                        </div>
+                    </div>
+                    <p class="text-gray-600 mb-4">Develop solutions to environmental problems and sustainability challenges.</p>
+                    <div class="flex items-center justify-between text-sm">
+                        <span class="bg-green-100 text-green-700 px-3 py-1 rounded-full">Future-Ready</span>
+                        <span class="text-gray-500">18K+ Jobs</span>
+                    </div>
+                </div>
+                
+                <div class="bg-white p-8 rounded-3xl shadow-lg card-hover">
+                    <div class="flex items-center mb-6">
+                        <div class="w-12 h-12 bg-blue-100 rounded-2xl flex items-center justify-center mr-4">
+                            <i class="fas fa-cog text-blue-600"></i>
+                        </div>
+                        <div>
+                            <h3 class="text-xl font-bold">Mechanical Engineer</h3>
+                            <p class="text-green-600 font-semibold">₹3-14 LPA</p>
+                        </div>
+                    </div>
+                    <p class="text-gray-600 mb-4">Design, develop, and test mechanical devices and systems.</p>
+                    <div class="flex items-center justify-between text-sm">
+                        <span class="bg-blue-100 text-blue-700 px-3 py-1 rounded-full">Versatile</span>
+                        <span class="text-gray-500">95K+ Jobs</span>
+                    </div>
+                </div>
+            </div>
+            
+            <!-- Business Careers -->
+            <div x-show="selectedCategory === 'business'" x-transition class="grid md:grid-cols-2 lg:grid-cols-3 gap-8">
+                <div class="bg-white p-8 rounded-3xl shadow-lg card-hover">
+                    <div class="flex items-center mb-6">
+                        <div class="w-12 h-12 bg-green-100 rounded-2xl flex items-center justify-center mr-4">
+                            <i class="fas fa-chart-line text-green-600"></i>
+                        </div>
+                        <div>
+                            <h3 class="text-xl font-bold">Digital Marketing Manager</h3>
+                            <p class="text-green-600 font-semibold">₹4-18 LPA</p>
+                        </div>
+                    </div>
+                    <p class="text-gray-600 mb-4">Develop and execute digital marketing strategies to grow business online.</p>
+                    <div class="flex items-center justify-between text-sm">
+                        <span class="bg-green-100 text-green-700 px-3 py-1 rounded-full">High Demand</span>
+                        <span class="text-gray-500">75K+ Jobs</span>
+                    </div>
+                </div>
+                
+                <div class="bg-white p-8 rounded-3xl shadow-lg card-hover">
+                    <div class="flex items-center mb-6">
+                        <div class="w-12 h-12 bg-blue-100 rounded-2xl flex items-center justify-center mr-4">
+                            <i class="fas fa-users text-blue-600"></i>
+                        </div>
+                        <div>
+                            <h3 class="text-xl font-bold">Management Consultant</h3>
+                            <p class="text-green-600 font-semibold">₹6-25 LPA</p>
+                        </div>
+                    </div>
+                    <p class="text-gray-600 mb-4">Help organizations improve performance and solve business challenges.</p>
+                    <div class="flex items-center justify-between text-sm">
+                        <span class="bg-blue-100 text-blue-700 px-3 py-1 rounded-full">Lucrative</span>
+                        <span class="text-gray-500">32K+ Jobs</span>
+                    </div>
+                </div>
+                
+                <div class="bg-white p-8 rounded-3xl shadow-lg card-hover">
+                    <div class="flex items-center mb-6">
+                        <div class="w-12 h-12 bg-indigo-100 rounded-2xl flex items-center justify-center mr-4">
+                            <i class="fas fa-calculator text-indigo-600"></i>
+                        </div>
+                        <div>
+                            <h3 class="text-xl font-bold">Financial Analyst</h3>
+                            <p class="text-green-600 font-semibold">₹4-16 LPA</p>
+                        </div>
+                    </div>
+                    <p class="text-gray-600 mb-4">Analyze financial data to guide investment and business decisions.</p>
+                    <div class="flex items-center justify-between text-sm">
+                        <span class="bg-indigo-100 text-indigo-700 px-3 py-1 rounded-full">Analytical</span>
+                        <span class="text-gray-500">55K+ Jobs</span>
+                    </div>
+                </div>
+            </div>
+            
+            <!-- Creative Careers -->
+            <div x-show="selectedCategory === 'creative'" x-transition class="grid md:grid-cols-2 lg:grid-cols-3 gap-8">
+                <div class="bg-white p-8 rounded-3xl shadow-lg card-hover">
+                    <div class="flex items-center mb-6">
+                        <div class="w-12 h-12 bg-purple-100 rounded-2xl flex items-center justify-center mr-4">
+                            <i class="fas fa-paint-brush text-purple-600"></i>
+                        </div>
+                        <div>
+                            <h3 class="text-xl font-bold">UX/UI Designer</h3>
+                            <p class="text-green-600 font-semibold">₹4-20 LPA</p>
+                        </div>
+                    </div>
+                    <p class="text-gray-600 mb-4">Create intuitive and beautiful user experiences for digital products.</p>
+                    <div class="flex items-center justify-between text-sm">
+                        <span class="bg-purple-100 text-purple-700 px-3 py-1 rounded-full">Creative + Tech</span>
+                        <span class="text-gray-500">42K+ Jobs</span>
+                    </div>
+                </div>
+                
+                <div class="bg-white p-8 rounded-3xl shadow-lg card-hover">
+                    <div class="flex items-center mb-6">
+                        <div class="w-12 h-12 bg-pink-100 rounded-2xl flex items-center justify-center mr-4">
+                            <i class="fas fa-video text-pink-600"></i>
+                        </div>
+                        <div>
+                            <h3 class="text-xl font-bold">Content Creator</h3>
+                            <p class="text-green-600 font-semibold">₹2-15 LPA</p>
+                        </div>
+                    </div>
+                    <p class="text-gray-600 mb-4">Create engaging content across digital platforms and social media.</p>
+                    <div class="flex items-center justify-between text-sm">
+                        <span class="bg-pink-100 text-pink-700 px-3 py-1 rounded-full">Trending</span>
+                        <span class="text-gray-500">68K+ Jobs</span>
+                    </div>
+                </div>
+                
+                <div class="bg-white p-8 rounded-3xl shadow-lg card-hover">
+                    <div class="flex items-center mb-6">
+                        <div class="w-12 h-12 bg-amber-100 rounded-2xl flex items-center justify-center mr-4">
+                            <i class="fas fa-camera text-amber-600"></i>
+                        </div>
+                        <div>
+                            <h3 class="text-xl font-bold">Graphic Designer</h3>
+                            <p class="text-green-600 font-semibold">₹2-12 LPA</p>
+                        </div>
+                    </div>
+                    <p class="text-gray-600 mb-4">Design visual concepts for brands, marketing materials, and media.</p>
+                    <div class="flex items-center justify-between text-sm">
+                        <span class="bg-amber-100 text-amber-700 px-3 py-1 rounded-full">Visual Arts</span>
+                        <span class="text-gray-500">89K+ Jobs</span>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </section>
+
+    <!-- Trending Careers 2025 -->
+    <section class="py-24 bg-white">
+        <div class="max-w-7xl mx-auto px-6">
+            <div class="text-center mb-16">
+                <h2 class="text-4xl font-display font-bold mb-6">🔥 Trending Careers 2025</h2>
+                <p class="text-lg text-gray-600 max-w-2xl mx-auto">These emerging career fields are experiencing rapid growth and offer exciting opportunities</p>
+            </div>
+            
+            <div class="grid md:grid-cols-2 lg:grid-cols-3 gap-8">
+                <div class="bg-gradient-to-br from-indigo-50 to-blue-100 p-8 rounded-3xl card-hover">
+                    <div class="flex items-center justify-between mb-6">
+                        <div class="w-14 h-14 bg-white rounded-2xl flex items-center justify-center">
+                            <i class="fas fa-robot text-indigo-600 text-2xl"></i>
+                        </div>
+                        <span class="bg-red-500 text-white text-xs px-3 py-1 rounded-full font-semibold">HOT</span>
+                    </div>
+                    <h3 class="text-2xl font-bold mb-4">AI/ML Engineer</h3>
+                    <p class="text-gray-600 mb-4">Build intelligent systems and machine learning models</p>
+                    <div class="flex items-center justify-between">
+                        <span class="text-green-600 font-bold text-lg">₹8-35 LPA</span>
+                        <span class="text-indigo-600 font-medium">+127% growth</span>
+                    </div>
+                </div>
+                
+                <div class="bg-gradient-to-br from-green-50 to-emerald-100 p-8 rounded-3xl card-hover">
+                    <div class="flex items-center justify-between mb-6">
+                        <div class="w-14 h-14 bg-white rounded-2xl flex items-center justify-center">
+                            <i class="fas fa-solar-panel text-green-600 text-2xl"></i>
+                        </div>
+                        <span class="bg-green-500 text-white text-xs px-3 py-1 rounded-full font-semibold">FUTURE</span>
+                    </div>
+                    <h3 class="text-2xl font-bold mb-4">Renewable Energy Engineer</h3>
+                    <p class="text-gray-600 mb-4">Design sustainable energy solutions for the future</p>
+                    <div class="flex items-center justify-between">
+                        <span class="text-green-600 font-bold text-lg">₹5-22 LPA</span>
+                        <span class="text-green-600 font-medium">+89% growth</span>
+                    </div>
+                </div>
+                
+                <div class="bg-gradient-to-br from-purple-50 to-pink-100 p-8 rounded-3xl card-hover">
+                    <div class="flex items-center justify-between mb-6">
+                        <div class="w-14 h-14 bg-white rounded-2xl flex items-center justify-center">
+                            <i class="fas fa-headset text-purple-600 text-2xl"></i>
+                        </div>
+                        <span class="bg-purple-500 text-white text-xs px-3 py-1 rounded-full font-semibold">RISING</span>
+                    </div>
+                    <h3 class="text-2xl font-bold mb-4">Customer Success Manager</h3>
+                    <p class="text-gray-600 mb-4">Ensure client satisfaction and business growth</p>
+                    <div class="flex items-center justify-between">
+                        <span class="text-green-600 font-bold text-lg">₹4-18 LPA</span>
+                        <span class="text-purple-600 font-medium">+76% growth</span>
+                    </div>
+                </div>
+                
+                <div class="bg-gradient-to-br from-amber-50 to-orange-100 p-8 rounded-3xl card-hover">
+                    <div class="flex items-center justify-between mb-6">
+                        <div class="w-14 h-14 bg-white rounded-2xl flex items-center justify-center">
+                            <i class="fas fa-truck text-amber-600 text-2xl"></i>
+                        </div>
+                        <span class="bg-amber-500 text-white text-xs px-3 py-1 rounded-full font-semibold">BOOMING</span>
+                    </div>
+                    <h3 class="text-2xl font-bold mb-4">Supply Chain Analyst</h3>
+                    <p class="text-gray-600 mb-4">Optimize logistics and e-commerce operations</p>
+                    <div class="flex items-center justify-between">
+                        <span class="text-green-600 font-bold text-lg">₹4-16 LPA</span>
+                        <span class="text-amber-600 font-medium">+92% growth</span>
+                    </div>
+                </div>
+                
+                <div class="bg-gradient-to-br from-teal-50 to-cyan-100 p-8 rounded-3xl card-hover">
+                    <div class="flex items-center justify-between mb-6">
+                        <div class="w-14 h-14 bg-white rounded-2xl flex items-center justify-center">
+                            <i class="fas fa-dna text-teal-600 text-2xl"></i>
+                        </div>
+                        <span class="bg-teal-500 text-white text-xs px-3 py-1 rounded-full font-semibold">NICHE</span>
+                    </div>
+                    <h3 class="text-2xl font-bold mb-4">Bioinformatics Scientist</h3>
+                    <p class="text-gray-600 mb-4">Analyze biological data using computational tools</p>
+                    <div class="flex items-center justify-between">
+                        <span class="text-green-600 font-bold text-lg">₹6-24 LPA</span>
+                        <span class="text-teal-600 font-medium">+68% growth</span>
+                    </div>
+                </div>
+                
+                <div class="bg-gradient-to-br from-rose-50 to-red-100 p-8 rounded-3xl card-hover">
+                    <div class="flex items-center justify-between mb-6">
+                        <div class="w-14 h-14 bg-white rounded-2xl flex items-center justify-center">
+                            <i class="fas fa-gamepad text-rose-600 text-2xl"></i>
+                        </div>
+                        <span class="bg-rose-500 text-white text-xs px-3 py-1 rounded-full font-semibold">EXCITING</span>
+                    </div>
+                    <h3 class="text-2xl font-bold mb-4">Game Developer</h3>
+                    <p class="text-gray-600 mb-4">Create immersive gaming experiences and virtual worlds</p>
+                    <div class="flex items-center justify-between">
+                        <span class="text-green-600 font-bold text-lg">₹3-20 LPA</span>
+                        <span class="text-rose-600 font-medium">+84% growth</span>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </section>
+
+    <!-- Career Pathways -->
+    <section class="py-24 bg-gray-50">
+        <div class="max-w-7xl mx-auto px-6">
+            <div class="text-center mb-16">
+                <h2 class="text-4xl font-display font-bold mb-6">Interactive Career Pathways</h2>
+                <p class="text-lg text-gray-600 max-w-2xl mx-auto">See exactly how education leads to your dream career with our visual roadmaps</p>
+            </div>
+            
+            <!-- Pathway Example -->
+            <div class="bg-white p-8 rounded-3xl shadow-lg max-w-6xl mx-auto">
+                <h3 class="text-2xl font-bold text-center mb-8">Software Developer Career Path</h3>
+                
+                <div class="grid grid-cols-1 md:grid-cols-4 gap-8 items-center">
+                    <!-- Step 1 -->
+                    <div class="text-center pathway-line">
+                        <div class="w-20 h-20 bg-indigo-100 rounded-full flex items-center justify-center mx-auto mb-4">
+                            <i class="fas fa-graduation-cap text-2xl text-indigo-600"></i>
+                        </div>
+                        <h4 class="font-bold mb-2">Class 12 (Science)</h4>
+                        <p class="text-sm text-gray-600">PCM/Computer Science</p>
+                        <div class="mt-3 text-xs bg-indigo-50 text-indigo-700 px-3 py-1 rounded-full">Foundation</div>
+                    </div>
+                    
+                    <!-- Step 2 -->
+                    <div class="text-center pathway-line">
+                        <div class="w-20 h-20 bg-blue-100 rounded-full flex items-center justify-center mx-auto mb-4">
+                            <i class="fas fa-university text-2xl text-blue-600"></i>
+                        </div>
+                        <h4 class="font-bold mb-2">B.Tech/BCA</h4>
+                        <p class="text-sm text-gray-600">Computer Science/IT</p>
+                        <div class="mt-3 text-xs bg-blue-50 text-blue-700 px-3 py-1 rounded-full">4 Years</div>
+                    </div>
+                    
+                    <!-- Step 3 -->
+                    <div class="text-center pathway-line">
+                        <div class="w-20 h-20 bg-green-100 rounded-full flex items-center justify-center mx-auto mb-4">
+                            <i class="fas fa-code text-2xl text-green-600"></i>
+                        </div>
+                        <h4 class="font-bold mb-2">Skills & Experience</h4>
+                        <p class="text-sm text-gray-600">Internships, Projects</p>
+                        <div class="mt-3 text-xs bg-green-50 text-green-700 px-3 py-1 rounded-full">1-2 Years</div>
+                    </div>
+                    
+                    <!-- Step 4 -->
+                    <div class="text-center">
+                        <div class="w-20 h-20 bg-purple-100 rounded-full flex items-center justify-center mx-auto mb-4">
+                            <i class="fas fa-briefcase text-2xl text-purple-600"></i>
+                        </div>
+                        <h4 class="font-bold mb-2">Career Ready</h4>
+                        <p class="text-sm text-gray-600">Software Developer</p>
+                        <div class="mt-3 text-xs bg-purple-50 text-purple-700 px-3 py-1 rounded-full">₹4-15 LPA</div>
+                    </div>
+                </div>
+                
+                <!-- Alternative Path -->
+                <div class="mt-12 pt-8 border-t">
+                    <h4 class="text-lg font-semibold mb-6 text-center">Alternative Path: Skill-Based Route</h4>
+                    <div class="grid grid-cols-1 md:grid-cols-3 gap-8 items-center">
+                        <div class="text-center">
+                            <div class="w-16 h-16 bg-amber-100 rounded-full flex items-center justify-center mx-auto mb-4">
+                                <i class="fas fa-laptop-code text-xl text-amber-600"></i>
+                            </div>
+                            <h5 class="font-bold mb-2">Coding Bootcamp</h5>
+                            <p class="text-sm text-gray-600">6-12 months intensive training</p>
+                        </div>
+                        
+                        <div class="text-center">
+                            <div class="w-16 h-16 bg-teal-100 rounded-full flex items-center justify-center mx-auto mb-4">
+                                <i class="fas fa-project-diagram text-xl text-teal-600"></i>
+                            </div>
+                            <h5 class="font-bold mb-2">Portfolio Building</h5>
+                            <p class="text-sm text-gray-600">Real projects + certifications</p>
+                        </div>
+                        
+                        <div class="text-center">
+                            <div class="w-16 h-16 bg-rose-100 rounded-full flex items-center justify-center mx-auto mb-4">
+                                <i class="fas fa-rocket text-xl text-rose-600"></i>
+                            </div>
+                            <h5 class="font-bold mb-2">Fast-Track Entry</h5>
+                            <p class="text-sm text-gray-600">Junior Developer in 1-2 years</p>
+                        </div>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </section>
+
+    <!-- Salary & Growth Insights -->
+    <section class="py-24 bg-white">
+        <div class="max-w-7xl mx-auto px-6">
+            <div class="text-center mb-16">
+                <h2 class="text-4xl font-display font-bold mb-6">Salary & Growth Insights</h2>
+                <p class="text-lg text-gray-600 max-w-2xl mx-auto">Understanding earning potential and career progression across different fields</p>
+            </div>
+            
+            <div class="grid md:grid-cols-2 gap-12">
+                <!-- Salary Comparison Chart -->
+                <div class="bg-gray-50 p-8 rounded-3xl">
+                    <h3 class="text-2xl font-bold mb-8 text-center">Starting Salary by Field</h3>
+                    <div class="space-y-6">
+                        <div>
+                            <div class="flex justify-between items-center mb-2">
+                                <span class="font-medium">Technology</span>
+                                <span class="font-bold text-green-600">₹4-8 LPA</span>
+                            </div>
+                            <div class="w-full bg-gray-200 rounded-full h-3">
+                                <div class="salary-bar h-3 rounded-full" style="width: 85%"></div>
+                            </div>
+                        </div>
+                        
+                        <div>
+                            <div class="flex justify-between items-center mb-2">
+                                <span class="font-medium">Healthcare</span>
+                                <span class="font-bold text-green-600">₹3-6 LPA</span>
+                            </div>
+                            <div class="w-full bg-gray-200 rounded-full h-3">
+                                <div class="salary-bar h-3 rounded-full" style="width: 70%"></div>
+                            </div>
+                        </div>
+                        
+                        <div>
+                            <div class="flex justify-between items-center mb-2">
+                                <span class="font-medium">Engineering</span>
+                                <span class="font-bold text-green-600">₹3-5 LPA</span>
+                            </div>
+                            <div class="w-full bg-gray-200 rounded-full h-3">
+                                <div class="salary-bar h-3 rounded-full" style="width: 65%"></div>
+                            </div>
+                        </div>
+                        
+                        <div>
+                            <div class="flex justify-between items-center mb-2">
+                                <span class="font-medium">Business</span>
+                                <span class="font-bold text-green-600">₹3-7 LPA</span>
+                            </div>
+                            <div class="w-full bg-gray-200 rounded-full h-3">
+                                <div class="salary-bar h-3 rounded-full" style="width: 75%"></div>
+                            </div>
+                        </div>
+                        
+                        <div>
+                            <div class="flex justify-between items-center mb-2">
+                                <span class="font-medium">Creative</span>
+                                <span class="font-bold text-green-600">₹2-5 LPA</span>
+                            </div>
+                            <div class="w-full bg-gray-200 rounded-full h-3">
+                                <div class="salary-bar h-3 rounded-full" style="width: 55%"></div>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+                
+                <!-- Growth Projections -->
+                <div class="space-y-8">
+                    <div class="bg-indigo-50 p-8 rounded-3xl">
+                        <h4 class="text-xl font-bold mb-4 flex items-center">
+                            <i class="fas fa-chart-line text-indigo-600 mr-3"></i>
+                            5-Year Growth Outlook
+                        </h4>
+                        <div class="grid grid-cols-2 gap-6">
+                            <div class="text-center">
+                                <div class="text-3xl font-bold text-indigo-600 mb-2">127%</div>
+                                <div class="text-sm text-gray-600">AI/Tech Jobs</div>
+                            </div>
+                            <div class="text-center">
+                                <div class="text-3xl font-bold text-green-600 mb-2">89%</div>
+                                <div class="text-sm text-gray-600">Green Energy</div>
+                            </div>
+                            <div class="text-center">
+                                <div class="text-3xl font-bold text-purple-600 mb-2">76%</div>
+                                <div class="text-sm text-gray-600">Digital Marketing</div>
+                            </div>
+                            <div class="text-center">
+                                <div class="text-3xl font-bold text-amber-600 mb-2">65%</div>
+                                <div class="text-sm text-gray-600">Healthcare</div>
+                            </div>
+                        </div>
+                    </div>
+                    
+                    <div class="bg-green-50 p-8 rounded-3xl">
+                        <h4 class="text-xl font-bold mb-4 flex items-center">
+                            <i class="fas fa-map-marker-alt text-green-600 mr-3"></i>
+                            Regional Variations
+                        </h4>
+                        <div class="space-y-4">
+                            <div class="flex justify-between items-center">
+                                <span class="font-medium">Metro Cities (Mumbai, Delhi, Bangalore)</span>
+                                <span class="text-green-600 font-bold">+30-50%</span>
+                            </div>
+                            <div class="flex justify-between items-center">
+                                <span class="font-medium">Tier-2 Cities (Pune, Chennai, Hyderabad)</span>
+                                <span class="text-blue-600 font-bold">+15-25%</span>
+                            </div>
+                            <div class="flex justify-between items-center">
+                                <span class="font-medium">Smaller Cities</span>
+                                <span class="text-gray-600 font-bold">Baseline</span>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </section>
+
+    <!-- Success Stories
+    <section class="py-24 bg-gray-50">
+        <div class="max-w-7xl mx-auto px-6">
+            <div class="text-center mb-16">
+                <h2 class="text-4xl font-display font-bold mb-6">Success Stories</h2>
+                <p class="text-lg text-gray-600 max-w-2xl mx-auto">Real students who found their perfect career path with EduPath</p>
+            </div>
+            
+            <div class="grid md:grid-cols-3 gap-8">
+                <div class="bg-white p-8 rounded-3xl shadow-lg card-hover">
+                    <div class="flex items-center mb-6">
+                        <img src="https://images.unsplash.com/photo-1494790108755-2616b612b786?ixlib=rb-4.0.3&auto=format&fit=crop&w=150&q=80" alt="Priya" class="w-16 h-16 rounded-full object-cover mr-4">
+                        <div>
+                            <h4 class="font-bold text-lg">Priya Sharma</h4>
+                            <p class="text-gray-600">Data Scientist at Tech Corp</p>
+                        </div>
+                    </div>
+                    <p class="text-gray-600 mb-6">"EduPath's assessment helped me realize my passion for data analysis. Now I'm working at my dream company with a ₹12 LPA package!"</p>
+                    <div class="flex items-center justify-between text-sm">
+                        <span class="bg-indigo-100 text-indigo-700 px-3 py-1 rounded-full">B.Tech → Data Science</span>
+                        <span class="text-green-600 font-semibold">₹12 LPA</span>
+                    </div>
+                </div>
+                
+                <div class="bg-white p-8 rounded-3xl shadow-lg card-hover">
+                    <div class="flex items-center mb-6">
+                        <img src="https://images.unsplash.com/photo-1507003211169-0a1dd7228f2d?ixlib=rb-4.0.3&auto=format&fit=crop&w=150&q=80" alt="Rahul" class="w-16 h-16 rounded-full object-cover mr-4">
+                        <div>
+                            <h4 class="font-bold text-lg">Rahul Kumar</h4>
+                            <p class="text-gray-600">UX Designer at Startup</p>
+                        </div>
+                    </div>
+                    <p class="text-gray-600 mb-6">"I was confused between engineering and design. EduPath showed me how to combine both interests into UX design. Best decision ever!"</p>
+                    <div class="flex items-center justify-between text-sm">
+                        <span class="bg-purple-100 text-purple-700 px-3 py-1 rounded-full">Arts → Design</span>
+                        <span class="text-green-600 font-semibold">₹8 LPA</span>
+                    </div>
+                </div>
+                
+                <div class="bg-white p-8 rounded-3xl shadow-lg card-hover">
+                    <div class="flex items-center mb-6">
+                        <img src="https://images.unsplash.com/photo-1438761681033-6461ffad8d80?ixlib=rb-4.0.3&auto=format&fit=crop&w=150&q=80" alt="Anjali" class="w-16 h-16 rounded-full object-cover mr-4">
+                        <div>
+                            <h4 class="font-bold text-lg">Anjali Patel</h4>
+                            <p class="text-gray-600">Digital Marketing Manager</p>
+                        </div>
+                    </div>
+                    <p class="text-gray-600 mb-6">"Started with Commerce, discovered digital marketing through EduPath's career mapping. Now leading campaigns for major brands!"</p>
+                    <div class="flex items-center justify-between text-sm">
+                        <span class="bg-green-100 text-green-700 px-3 py-1 rounded-full">Commerce → Marketing</span>
+                        <span class="text-green-600 font-semibold">₹15 LPA</span>
+                    </div>
+                </div>
+            </div>
+            
+            <!-- More Success Metrics -->
+            <div class="mt-16 grid grid-cols-2 md:grid-cols-4 gap-8 text-center">
+                <div>
+                    <div class="text-4xl font-bold text-indigo-600 mb-2">50,000+</div>
+                    <div class="text-gray-600">Students Guided</div>
+                </div>
+                <div>
+                    <div class="text-4xl font-bold text-green-600 mb-2">89%</div>
+                    <div class="text-gray-600">Career Satisfaction</div>
+                </div>
+                <div>
+                    <div class="text-4xl font-bold text-purple-600 mb-2">₹8.5L</div>
+                    <div class="text-gray-600">Average Starting Salary</div>
+                </div>
+                <div>
+                    <div class="text-4xl font-bold text-amber-600 mb-2">92%</div>
+                    <div class="text-gray-600">Job Placement Rate</div>
+                </div>
+            </div>
+        </div>
+    </section>
+     -->
+
+    <!-- Career vs Education Mapping -->
+    <section class="py-24 bg-white">
+        <div class="max-w-7xl mx-auto px-6">
+            <div class="text-center mb-16">
+                <h2 class="text-4xl font-display font-bold mb-6">Education to Career Mapping</h2>
+                <p class="text-lg text-gray-600 max-w-2xl mx-auto">Understand which degrees and courses lead to which career opportunities</p>
+            </div>
+            
+            <div class="space-y-12">
+                <!-- Engineering Path -->
+                <div class="bg-gradient-to-r from-indigo-50 to-blue-50 p-8 rounded-3xl">
+                    <div class="flex items-center mb-8">
+                        <div class="w-16 h-16 bg-indigo-100 rounded-2xl flex items-center justify-center mr-4">
+                            <i class="fas fa-cog text-2xl text-indigo-600"></i>
+                        </div>
+                        <div>
+                            <h3 class="text-2xl font-bold">Engineering Stream</h3>
+                            <p class="text-gray-600">Multiple specializations, diverse career paths</p>
+                        </div>
+                    </div>
+                    
+                    <div class="grid md:grid-cols-3 gap-8">
+                        <div>
+                            <h4 class="font-bold text-lg mb-4 text-indigo-700">Degree Options</h4>
+                            <ul class="space-y-2 text-gray-600">
+                                <li>• B.Tech Computer Science</li>
+                                <li>• B.Tech Mechanical</li>
+                                <li>• B.Tech Civil</li>
+                                <li>• B.Tech Electrical</li>
+                                <li>• B.Tech Electronics</li>
+                            </ul>
+                        </div>
+                        <div>
+                            <h4 class="font-bold text-lg mb-4 text-blue-700">Career Options</h4>
+                            <ul class="space-y-2 text-gray-600">
+                                <li>• Software Developer</li>
+                                <li>• Mechanical Engineer</li>
+                                <li>• Civil Engineer</li>
+                                <li>• Electronics Engineer</li>
+                                <li>• Data Scientist</li>
+                            </ul>
+                        </div>
+                        <div>
+                            <h4 class="font-bold text-lg mb-4 text-purple-700">Alternative Routes</h4>
+                            <ul class="space-y-2 text-gray-600">
+                                <li>• Coding Bootcamps</li>
+                                <li>• Diploma Programs</li>
+                                <li>• Online Certifications</li>
+                                <li>• Skill-based Courses</li>
+                                <li>• Industry Training</li>
+                            </ul>
+                        </div>
+                    </div>
+                </div>
+                
+                <!-- Medical Path -->
+                <div class="bg-gradient-to-r from-pink-50 to-rose-50 p-8 rounded-3xl">
+                    <div class="flex items-center mb-8">
+                        <div class="w-16 h-16 bg-pink-100 rounded-2xl flex items-center justify-center mr-4">
+                            <i class="fas fa-stethoscope text-2xl text-pink-600"></i>
+                        </div>
+                        <div>
+                            <h3 class="text-2xl font-bold">Healthcare Stream</h3>
+                            <p class="text-gray-600">Serving humanity through medical sciences</p>
+                        </div>
+                    </div>
+                    
+                    <div class="grid md:grid-cols-3 gap-8">
+                        <div>
+                            <h4 class="font-bold text-lg mb-4 text-pink-700">Degree Options</h4>
+                            <ul class="space-y-2 text-gray-600">
+                                <li>• MBBS (Medicine)</li>
+                                <li>• BDS (Dental)</li>
+                                <li>• B.Pharmacy</li>
+                                <li>• B.Sc Nursing</li>
+                                <li>• Physiotherapy</li>
+                            </ul>
+                        </div>
+                        <div>
+                            <h4 class="font-bold text-lg mb-4 text-rose-700">Career Options</h4>
+                            <ul class="space-y-2 text-gray-600">
+                                <li>• Medical Doctor</li>
+                                <li>• Dentist</li>
+                                <li>• Pharmacist</li>
+                                <li>• Nurse</li>
+                                <li>• Physiotherapist</li>
+                            </ul>
+                        </div>
+                        <div>
+                            <h4 class="font-bold text-lg mb-4 text-red-700">Alternative Routes</h4>
+                            <ul class="space-y-2 text-gray-600">
+                                <li>• Medical Assistant Programs</li>
+                                <li>• Health Technology</li>
+                                <li>• Medical Research</li>
+                                <li>• Healthcare Management</li>
+                                <li>• Medical Writing</li>
+                            </ul>
+                        </div>
+                    </div>
+                </div>
+                
+                <!-- Commerce Path -->
+                <div class="bg-gradient-to-r from-green-50 to-emerald-50 p-8 rounded-3xl">
+                    <div class="flex items-center mb-8">
+                        <div class="w-16 h-16 bg-green-100 rounded-2xl flex items-center justify-center mr-4">
+                            <i class="fas fa-chart-line text-2xl text-green-600"></i>
+                        </div>
+                        <div>
+                            <h3 class="text-2xl font-bold">Commerce Stream</h3>
+                            <p class="text-gray-600">Business, finance, and entrepreneurship</p>
+                        </div>
+                    </div>
+                    
+                    <div class="grid md:grid-cols-3 gap-8">
+                        <div>
+                            <h4 class="font-bold text-lg mb-4 text-green-700">Degree Options</h4>
+                            <ul class="space-y-2 text-gray-600">
+                                <li>• B.Com (Commerce)</li>
+                                <li>• BBA (Business Admin)</li>
+                                <li>• CA (Chartered Accountant)</li>
+                                <li>• CS (Company Secretary)</li>
+                                <li>• B.Econ (Economics)</li>
+                            </ul>
+                        </div>
+                        <div>
+                            <h4 class="font-bold text-lg mb-4 text-emerald-700">Career Options</h4>
+                            <ul class="space-y-2 text-gray-600">
+                                <li>• Financial Analyst</li>
+                                <li>• Business Manager</li>
+                                <li>• Accountant</li>
+                                <li>• Investment Banker</li>
+                                <li>• Entrepreneur</li>
+                            </ul>
+                        </div>
+                        <div>
+                            <h4 class="font-bold text-lg mb-4 text-teal-700">Alternative Routes</h4>
+                            <ul class="space-y-2 text-gray-600">
+                                <li>• Digital Marketing</li>
+                                <li>• E-commerce</li>
+                                <li>• Financial Technology</li>
+                                <li>• Business Analytics</li>
+                                <li>• Startup Ecosystem</li>
+                            </ul>
+                        </div>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </section>
+
+    <!-- Government Career Options -->
+    <section class="py-24 bg-gray-50">
+        <div class="max-w-7xl mx-auto px-6">
+            <div class="text-center mb-16">
+                <h2 class="text-4xl font-display font-bold mb-6">🏛️ Government Career Options</h2>
+                <p class="text-lg text-gray-600 max-w-2xl mx-auto">Stable, prestigious careers in public service with excellent benefits</p>
+            </div>
+            
+            <div class="grid md:grid-cols-2 lg:grid-cols-3 gap-8">
+                <div class="bg-white p-8 rounded-3xl shadow-lg card-hover">
+                    <div class="w-16 h-16 bg-indigo-100 rounded-2xl flex items-center justify-center mb-6">
+                        <i class="fas fa-gavel text-2xl text-indigo-600"></i>
+                    </div>
+                    <h3 class="text-xl font-bold mb-4">Civil Services (IAS/IPS)</h3>
+                    <p class="text-gray-600 mb-4">Administrative and police services at the highest levels of government</p>
+                    <div class="space-y-2">
+                        <div class="flex justify-between text-sm">
+                            <span>Qualification:</span>
+                            <span class="font-semibold">Graduation</span>
+                        </div>
+                        <div class="flex justify-between text-sm">
+                            <span>Exam:</span>
+                            <span class="font-semibold">UPSC CSE</span>
+                        </div>
+                        <div class="flex justify-between text-sm">
+                            <span>Salary:</span>
+                            <span class="font-semibold text-green-600">₹56K - ₹2.5L/month</span>
+                        </div>
+                    </div>
+                </div>
+                
+                <div class="bg-white p-8 rounded-3xl shadow-lg card-hover">
+                    <div class="w-16 h-16 bg-green-100 rounded-2xl flex items-center justify-center mb-6">
+                        <i class="fas fa-graduation-cap text-2xl text-green-600"></i>
+                    </div>
+                    <h3 class="text-xl font-bold mb-4">Government Teaching</h3>
+                    <p class="text-gray-600 mb-4">Professor, teacher, and educational administrator roles</p>
+                    <div class="space-y-2">
+                        <div class="flex justify-between text-sm">
+                            <span>Qualification:</span>
+                            <span class="font-semibold">B.Ed/M.Ed</span>
+                        </div>
+                        <div class="flex justify-between text-sm">
+                            <span>Exam:</span>
+                            <span class="font-semibold">TET/NET</span>
+                        </div>
+                        <div class="flex justify-between text-sm">
+                            <span>Salary:</span>
+                            <span class="font-semibold text-green-600">₹35K - ₹1.5L/month</span>
+                        </div>
+                    </div>
+                </div>
+                
+                <div class="bg-white p-8 rounded-3xl shadow-lg card-hover">
+                    <div class="w-16 h-16 bg-blue-100 rounded-2xl flex items-center justify-center mb-6">
+                        <i class="fas fa-shield-alt text-2xl text-blue-600"></i>
+                    </div>
+                    <h3 class="text-xl font-bold mb-4">Defense Services</h3>
+                    <p class="text-gray-600 mb-4">Army, Navy, Air Force officer positions</p>
+                    <div class="space-y-2">
+                        <div class="flex justify-between text-sm">
+                            <span>Qualification:</span>
+                            <span class="font-semibold">Graduation</span>
+                        </div>
+                        <div class="flex justify-between text-sm">
+                            <span>Exam:</span>
+                            <span class="font-semibold">CDS/NDA</span>
+                        </div>
+                        <div class="flex justify-between text-sm">
+                            <span>Salary:</span>
+                            <span class="font-semibold text-green-600">₹56K - ₹2L/month</span>
+                        </div>
+                    </div>
+                </div>
+                
+                <div class="bg-white p-8 rounded-3xl shadow-lg card-hover">
+                    <div class="w-16 h-16 bg-purple-100 rounded-2xl flex items-center justify-center mb-6">
+                        <i class="fas fa-university text-2xl text-purple-600"></i>
+                    </div>
+                    <h3 class="text-xl font-bold mb-4">Banking Services</h3>
+                    <p class="text-gray-600 mb-4">Public sector bank officer and specialist roles</p>
+                    <div class="space-y-2">
+                        <div class="flex justify-between text-sm">
+                            <span>Qualification:</span>
+                            <span class="font-semibold">Graduation</span>
+                        </div>
+                        <div class="flex justify-between text-sm">
+                            <span>Exam:</span>
+                            <span class="font-semibold">IBPS/SBI</span>
+                        </div>
+                        <div class="flex justify-between text-sm">
+                            <span>Salary:</span>
+                            <span class="font-semibold text-green-600">₹25K - ₹80K/month</span>
+                        </div>
+                    </div>
+                </div>
+                
+                <div class="bg-white p-8 rounded-3xl shadow-lg card-hover">
+                    <div class="w-16 h-16 bg-amber-100 rounded-2xl flex items-center justify-center mb-6">
+                        <i class="fas fa-train text-2xl text-amber-600"></i>
+                    </div>
+                    <h3 class="text-xl font-bold mb-4">Railway Services</h3>
+                    <p class="text-gray-600 mb-4">Technical and non-technical positions in Indian Railways</p>
+                    <div class="space-y-2">
+                        <div class="flex justify-between text-sm">
+                            <span>Qualification:</span>
+                            <span class="font-semibold">10th/12th/Grad</span>
+                        </div>
+                        <div class="flex justify-between text-sm">
+                            <span>Exam:</span>
+                            <span class="font-semibold">RRB</span>
+                        </div>
+                        <div class="flex justify-between text-sm">
+                            <span>Salary:</span>
+                            <span class="font-semibold text-green-600">₹19K - ₹70K/month</span>
+                        </div>
+                    </div>
+                </div>
+                
+                <div class="bg-white p-8 rounded-3xl shadow-lg card-hover">
+                    <div class="w-16 h-16 bg-pink-100 rounded-2xl flex items-center justify-center mb-6">
+                        <i class="fas fa-heartbeat text-2xl text-pink-600"></i>
+                    </div>
+                    <h3 class="text-xl font-bold mb-4">Medical Services</h3>
+                    <p class="text-gray-600 mb-4">Government hospitals and health department positions</p>
+                    <div class="space-y-2">
+                        <div class="flex justify-between text-sm">
+                            <span>Qualification:</span>
+                            <span class="font-semibold">MBBS/B.Sc</span>
+                        </div>
+                        <div class="flex justify-between text-sm">
+                            <span>Exam:</span>
+                            <span class="font-semibold">NEET/State Exams</span>
+                        </div>
+                        <div class="flex justify-between text-sm">
+                            <span>Salary:</span>
+                            <span class="font-semibold text-green-600">₹30K - ₹1.2L/month</span>
+                        </div>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </section>
+
+    <!-- CTA Section -->
+    <section class="py-24 relative overflow-hidden">
+        <div class="absolute inset-0 bg-gradient z-0 opacity-90"></div>
+        
+        <div class="max-w-5xl mx-auto px-6 relative z-10">
+            <div class="bg-white rounded-3xl p-12 shadow-xl">
+                <div class="text-center">
+                    <h2 class="text-3xl md:text-4xl font-display font-bold mb-6">Ready to Discover Your Perfect Career?</h2>
+                    <p class="text-gray-600 mb-8 text-lg max-w-2xl mx-auto">Join over 50,000 students who have found their dream careers with EduPath's comprehensive guidance and assessment tools.</p>
+                    
+                    <div class="flex flex-col sm:flex-row gap-4 justify-center">
+                        <a href="./assessment.html" class="px-8 py-4 bg-black text-white font-medium rounded-full shadow-lg hover:shadow-xl transition-all duration-300 hover:scale-105">
+                            Take Free Career Assessment
+                        </a>
+                        <a href="./explore_colleges.html" class="px-8 py-4 bg-white text-black font-medium rounded-full border border-black shadow-lg hover:shadow-xl transition-all duration-300 hover:scale-105">
+                            Explore Colleges
+                        </a>
+                    </div>
+                    
+                    <div class="mt-8 flex items-center justify-center space-x-8 text-sm text-gray-500">
+                        <div class="flex items-center">
+                            <i class="fas fa-check-circle text-green-500 mr-2"></i>
+                            Free Forever
+                        </div>
+                        <div class="flex items-center">
+                            <i class="fas fa-clock text-blue-500 mr-2"></i>
+                            15 min Assessment
+                        </div>
+                        <div class="flex items-center">
+                            <i class="fas fa-certificate text-purple-500 mr-2"></i>
+                            Detailed Report
+                        </div>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </section>
+
+    <!-- AI Floating Button -->
+    <div x-data="{ open: false, messages: ['👋 Hi! I\'m EduPath AI. Ask me about careers, colleges, or assessments.'], input: '' }" class="fixed bottom-6 right-6 z-50">
+        <!-- Button -->
+        <button 
+            @click="open = !open" 
+            class="w-14 h-14 rounded-full bg-gradient flex items-center justify-center shadow-xl hover:scale-110 transition-transform"
+        >
+            <i class="fas fa-robot text-white text-2xl"></i>
+        </button>
+
+        <!-- Chat Popup -->
+        <div 
+            x-show="open" 
+            x-transition 
+            class="absolute bottom-20 right-0 w-80 bg-white rounded-2xl shadow-2xl p-4"
+            @click.outside="open = false"
+        >
+            <div class="flex justify-between items-center mb-3">
+                <h3 class="font-semibold text-lg text-gray-800">EduPath AI</h3>
+                <button @click="open = false" class="text-gray-500 hover:text-gray-800">&times;</button>
+            </div>
+            
+            <!-- Messages -->
+            <div class="h-48 overflow-y-auto border rounded-lg p-2 text-sm text-gray-600 space-y-2" x-ref="chatbox">
+                <template x-for="msg in messages" :key="msg">
+                    <p x-text="msg"></p>
+                </template>
+            </div>
+            
+            <!-- Input -->
+            <div class="mt-3 flex">
+                <input 
+                    type="text" 
+                    placeholder="Ask about careers..." 
+                    class="flex-1 border rounded-l-lg px-3 py-2 focus:outline-none focus:ring focus:ring-indigo-500"
+                    x-model="input"
+                    @keydown.enter="if(input.trim() !== '') { messages.push('You: ' + input); input=''; $nextTick(() => $refs.chatbox.scrollTop = $refs.chatbox.scrollHeight) }"
+                />
+                <button 
+                    class="bg-indigo-600 text-white px-4 py-2 rounded-r-lg hover:bg-indigo-700"
+                    @click="if(input.trim() !== '') { messages.push('You: ' + input); input=''; $nextTick(() => $refs.chatbox.scrollTop = $refs.chatbox.scrollHeight) }"
+                >
+                    Send
+                </button>
+            </div>
+        </div>
+    </div>
+    
+    <!-- Footer -->
+    <footer class="bg-gray-900 text-white py-16">
+        <div class="max-w-7xl mx-auto px-6 grid grid-cols-1 sm:grid-cols-2 md:grid-cols-4 gap-12">
+            <div>
+                <h3 class="font-display text-2xl font-bold mb-4">EduPath</h3>
+                <p class="text-gray-400">Your ultimate digital career guide. Navigate your educational journey with confidence and discover your perfect career path.</p>
+            </div>
+            <div>
+                <h4 class="text-lg font-semibold mb-3">Career Services</h4>
+                <ul class="space-y-2 text-gray-400">
+                    <li><a href="./assessment.html" class="hover:text-white transition">Career Assessment</a></li>
+                    <li><a href="#career-explorer" class="hover:text-white transition">Career Explorer</a></li>
+                    <li><a href="#" class="hover:text-white transition">Salary Insights</a></li>
+                    <li><a href="#" class="hover:text-white transition">Career Pathways</a></li>
+                </ul>
+            </div>
+            <div>
+                <h4 class="text-lg font-semibold mb-3">Education</h4>
+                <ul class="space-y-2 text-gray-400">
+                    <li><a href="./explore_colleges.html" class="hover:text-white transition">College Directory</a></li>
+                    <li><a href="#" class="hover:text-white transition">Course Information</a></li>
+                    <li><a href="#" class="hover:text-white transition">Admission Guide</a></li>
+                    <li><a href="#" class="hover:text-white transition">Scholarship Info</a></li>
+                </ul>
+            </div>
+            <div>
+                <h4 class="text-lg font-semibold mb-3">Support</h4>
+                <ul class="space-y-2 text-gray-400">
+                    <li><a href="#" class="hover:text-white transition">Help Center</a></li>
+                    <li><a href="#" class="hover:text-white transition">Student Resources</a></li>
+                    <li><a href="#" class="hover:text-white transition">Career Counseling</a></li>
+                    <li><a href="../index.html#contact" class="hover:text-white transition">Contact Us</a></li>
+                </ul>
+            </div>
+        </div>
+        <div class="mt-12 text-center text-sm text-gray-500 border-t border-gray-700 pt-8">
+            &copy; 2025 EduPath. All rights reserved. | Privacy Policy | Terms of Service
+        </div>
+    </footer>
+
+    <script>
+        // Smooth scrolling for navigation links
+        document.querySelectorAll('a[href^="#"]').forEach(anchor => {
+            anchor.addEventListener('click', function (e) {
+                e.preventDefault();
+                const target = document.querySelector(this.getAttribute('href'));
+                if (target) {
+                    target.scrollIntoView({
+                        behavior: 'smooth',
+                        block: 'start'
+                    });
+                }
+            });
+        });
+
+        // Add some interactive effects
+        document.querySelectorAll('.card-hover').forEach(card => {
+            card.addEventListener('mouseenter', function() {
+                this.style.transform = 'translateY(-10px)';
+            });
+            
+            card.addEventListener('mouseleave', function() {
+                this.style.transform = 'translateY(0)';
+            });
+        });
+    </script>
+</body>
+</html>
