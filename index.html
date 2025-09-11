@@ -126,7 +126,7 @@
                 <nav class="hidden md:flex items-center space-x-8">
                     <a href="#features" class="nav-item font-medium hover:text-indigo-700 transition">Features</a>
                     <a href="#how-it-works" class="nav-item font-medium hover:text-indigo-700 transition">How It Works</a>
-                    <a href="#colleges" class="nav-item font-medium hover:text-indigo-700 transition">Colleges</a>
+                    <a href="/pages/explore_colleges.html" class="nav-item font-medium hover:text-indigo-700 transition">Colleges</a>
                     <a href="#careers" class="nav-item font-medium hover:text-indigo-700 transition">Careers</a>
                     <a href="#contact" class="nav-item font-medium hover:text-indigo-700 transition">Contact</a>
                     
@@ -175,7 +175,7 @@
                 <nav class="space-y-8">
                     <a href="#features" class="block text-lg font-medium hover:text-indigo-600">Features</a>
                     <a href="#how-it-works" class="block text-lg font-medium hover:text-indigo-600">How It Works</a>
-                    <a href="#colleges" class="block text-lg font-medium hover:text-indigo-600">Colleges</a>
+                    <a href="/pages/explore_colleges.html" class="block text-lg font-medium hover:text-indigo-600">Colleges</a>
                     <a href="#careers" class="block text-lg font-medium hover:text-indigo-600">Careers</a>
                     <a href="#contact" class="block text-lg font-medium hover:text-indigo-600">Contact</a>
                 </nav>
@@ -228,7 +228,7 @@
                         <a href="/pages/assessment.html" class="px-8 py-4 bg-black text-white font-medium rounded-full shadow-md hover:shadow-xl transition-all duration-300 hover:scale-105">
                             Take Free Assessment
                         </a>
-                        <a href="#" class="px-8 py-4 bg-white text-black font-medium rounded-full border border-black shadow-md hover:shadow-xl transition-all duration-300 hover:scale-105">
+                        <a href="./pages/explore_colleges.html" class="px-8 py-4 bg-white text-black font-medium rounded-full border border-black shadow-md hover:shadow-xl transition-all duration-300 hover:scale-105">
                             Explore Colleges
                         </a>
                     </div>
@@ -503,8 +503,54 @@
                 </details>
             </div>
         </div>
-    </section>
+    </section><!-- AI Floating Button -->
+<div x-data="{ open: false, messages: ['👋 Hi! I\'m EduPath AI. Ask me about careers, colleges, or assessments.'], input: '' }" class="fixed bottom-6 right-6 z-50">
+    <!-- Button -->
+    <button 
+        @click="open = !open" 
+        class="w-14 h-14 rounded-full bg-gradient flex items-center justify-center shadow-xl hover:scale-110 transition-transform"
+    >
+        <i class="fas fa-robot text-white text-2xl"></i>
+    </button>
 
+    <!-- Chat Popup -->
+    <div 
+        x-show="open" 
+        x-transition 
+        class="absolute bottom-20 right-0 w-80 bg-white rounded-2xl shadow-2xl p-4"
+        @click.outside="open = false"
+    >
+        <div class="flex justify-between items-center mb-3">
+            <h3 class="font-semibold text-lg text-gray-800">EduPath AI</h3>
+            <button @click="open = false" class="text-gray-500 hover:text-gray-800">&times;</button>
+        </div>
+        
+        <!-- Messages -->
+        <div class="h-48 overflow-y-auto border rounded-lg p-2 text-sm text-gray-600 space-y-2" x-ref="chatbox">
+            <template x-for="msg in messages" :key="msg">
+                <p x-text="msg"></p>
+            </template>
+        </div>
+        
+        <!-- Input -->
+        <div class="mt-3 flex">
+            <input 
+                type="text" 
+                placeholder="Type your question..." 
+                class="flex-1 border rounded-l-lg px-3 py-2 focus:outline-none focus:ring focus:ring-indigo-500"
+                x-model="input"
+                @keydown.enter="if(input.trim() !== '') { messages.push('You: ' + input); input=''; $nextTick(() => $refs.chatbox.scrollTop = $refs.chatbox.scrollHeight) }"
+            />
+            <button 
+                class="bg-indigo-600 text-white px-4 py-2 rounded-r-lg hover:bg-indigo-700"
+                @click="if(input.trim() !== '') { messages.push('You: ' + input); input=''; $nextTick(() => $refs.chatbox.scrollTop = $refs.chatbox.scrollHeight) }"
+            >
+                Send
+            </button>
+        </div>
+    </div>
+</div>
+    
     <!-- Footer -->
     <footer class="bg-gray-900 text-white py-16">
         <div class="max-w-7xl mx-auto px-6 grid grid-cols-1 sm:grid-cols-2 md:grid-cols-4 gap-12">
@@ -569,6 +615,15 @@
                 this.style.transform = 'translateY(0)';
             });
         });
+        //serviceWorker
+        if ('serviceWorker' in navigator) {
+  window.addEventListener('load', () => {
+    navigator.serviceWorker.register('/sw.js')
+      .then(reg => console.log('✅ Service Worker registered:', reg.scope))
+      .catch(err => console.error('❌ Service Worker registration failed:', err));
+  });
+}
     </script>
 </body>
+</html>
 </html>

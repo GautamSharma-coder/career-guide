@@ -1,4 +1,4 @@
-const CACHE_NAME = "EduPath-pwa-v1';
+const CACHE_NAME = "EduPath-pwa-v1";
 const urlsToCache = [
   '/',
   '/index.html',
