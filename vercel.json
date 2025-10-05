@@ -1,12 +1,12 @@
-// vercel.json
+
 {
   "rewrites": [
     {
-      "source": "/assessment/:slug",
+      "source": "/pages/assessment/:slug",
       "destination": "/assessment.html"
     },
     {
-      "source": "/dashboard/:slug",
+      "source": "/pages/dashboard/:slug",
       "destination": "/dashboard.html"
     }
   ],
