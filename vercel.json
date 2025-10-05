@@ -1,0 +1,24 @@
+// vercel.json
+{
+  "rewrites": [
+    {
+      "source": "/assessment/:slug",
+      "destination": "/assessment.html"
+    },
+    {
+      "source": "/dashboard/:slug",
+      "destination": "/dashboard.html"
+    }
+  ],
+  "headers": [
+    {
+      "source": "/(.*)",
+      "headers": [
+        {
+          "key": "Cache-Control",
+          "value": "public, max-age=3600, s-maxage=86400"
+        }
+      ]
+    }
+  ]
+}
