@@ -1,0 +1,130 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>Offline | EduPath</title>
+  <link rel="icon" href="/icons/favicon.png" type="image/png">
+  <style>
+    :root {
+      --bg: #f4f6f8;
+      --text: #1a1a1a;
+      --primary: #2563eb;
+      --shadow: rgba(0, 0, 0, 0.1);
+    }
+
+    * {
+      box-sizing: border-box;
+      margin: 0;
+      padding: 0;
+      font-family: "Inter", "Segoe UI", Roboto, sans-serif;
+    }
+
+    body {
+      background: var(--bg);
+      color: var(--text);
+      display: flex;
+      align-items: center;
+      justify-content: center;
+      height: 100vh;
+      text-align: center;
+      padding: 1.5rem;
+    }
+
+    .card {
+      background: #fff;
+      border-radius: 1rem;
+      box-shadow: 0 4px 20px var(--shadow);
+      padding: 2rem;
+      max-width: 450px;
+      width: 100%;
+      animation: fadeIn 0.6s ease;
+    }
+
+    .icon {
+      font-size: 4rem;
+      margin-bottom: 1rem;
+      animation: float 3s ease-in-out infinite;
+    }
+
+    @keyframes float {
+      0%, 100% { transform: translateY(0px); }
+      50% { transform: translateY(-10px); }
+    }
+
+    h1 {
+      font-size: 1.8rem;
+      margin-bottom: 0.8rem;
+      color: var(--primary);
+    }
+
+    p {
+      color: #555;
+      margin-bottom: 1.2rem;
+      line-height: 1.6;
+      font-size: 1.05rem;
+    }
+
+    .excuse {
+      background: #fef3c7;
+      border-left: 4px solid #f59e0b;
+      padding: 1rem;
+      border-radius: 0.5rem;
+      margin-bottom: 1.5rem;
+      font-style: italic;
+      color: #92400e;
+    }
+
+    button {
+      background: var(--primary);
+      color: #fff;
+      border: none;
+      padding: 0.8rem 1.6rem;
+      border-radius: 0.5rem;
+      font-size: 1rem;
+      cursor: pointer;
+      transition: all 0.3s ease;
+      font-weight: 600;
+    }
+
+    button:hover {
+      background: #1d4ed8;
+      transform: scale(1.05);
+    }
+
+    @keyframes fadeIn {
+      from { opacity: 0; transform: translateY(20px); }
+      to { opacity: 1; transform: translateY(0); }
+    }
+
+    .footer {
+      margin-top: 1rem;
+      font-size: 0.85rem;
+      color: #999;
+    }
+
+    @media (max-width: 500px) {
+      .card { padding: 1.5rem; }
+      h1 { font-size: 1.5rem; }
+      .icon { font-size: 3rem; }
+    }
+  </style>
+</head>
+<body>
+  <div class="card">
+    <div class="icon">🦖</div>
+    <h1>Oops! No WiFi = No Way</h1>
+    <p>Your internet decided to take a study break... without asking you first. Rude, right?</p>
+    
+    <div class="excuse">
+      💡 Perfect excuse: "Sorry Prof, my internet died mid-assignment. I tried CPR but it didn't work."
+    </div>
+
+    <button onclick="window.location.reload()">Wake Up My Internet</button>
+    
+    <div class="footer">
+      (Or maybe just check if you paid the WiFi bill 👀)
+    </div>
+  </div>
+</body>
+</html>
