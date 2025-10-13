@@ -10,7 +10,7 @@ const urlsToCache = [
   '/index.html',
   '/pages/roadmaps_page.html',
   '/pages/explore_colleges.html',
-  '/pages/careers_page.html'
+  '/pages/careers_page.html',
   '/manifest.json',
   '/icons/favicon.png',
   '/offline.html'
